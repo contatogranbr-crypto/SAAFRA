@@ -1,0 +1,563 @@
+/* Plataforma Gran Bernardo Agro - Nova Identidade Visual
+   Fundo: Preto Grafite | Cards: Cinza Escuro | Destaque: Ciano Neon
+   Gráficos: Azul Elétrico | Positivo: Verde | Alerta: Laranja | Erro: Vermelho
+   IA: Roxo & Magenta | Bordas finas, cantos arredondados, degradês roxo-para-ciano
+*/
+
+:root {
+  /* Typography Tokens */
+  --font-display: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-body: 'IBM Plex Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  /* Base Surfaces - Fundo Preto Grafite & Cards Cinza Escuro */
+  --color-background: #0b0d11;
+  --color-surface-1: #101319;
+  --color-surface-2: #161922;
+  --color-surface-3: #1d212c;
+  --color-surface-hover: #252a37;
+  
+  --color-card: rgba(22, 25, 34, 0.85);
+  --color-card-solid: #161922;
+  --color-card-border: rgba(0, 242, 254, 0.14);
+  --color-card-hover-border: rgba(0, 242, 254, 0.45);
+  --color-border: rgba(255, 255, 255, 0.08);
+  --color-border-subtle: rgba(255, 255, 255, 0.05);
+
+  /* Destaque Principal - Ciano Neon */
+  --color-primary: #00f2fe;
+  --color-primary-light: #38f9d7;
+  --color-primary-dark: #0891b2;
+  --color-primary-glow: rgba(0, 242, 254, 0.35);
+  --color-cyan: #00f2fe;
+  --color-cyan-glow: rgba(0, 242, 254, 0.35);
+
+  /* Gráficos - Azul Elétrico */
+  --color-electric-blue: #2563eb;
+  --color-electric-blue-light: #3b82f6;
+  --color-electric-blue-dark: #1d4ed8;
+  --color-electric-blue-glow: rgba(37, 99, 235, 0.35);
+
+  /* Resultados Positivos - Verde */
+  --color-positive: #10b981;
+  --color-positive-light: #34d399;
+  --color-positive-glow: rgba(16, 185, 129, 0.25);
+
+  /* Alertas - Laranja */
+  --color-alert: #f97316;
+  --color-alert-light: #fb923c;
+  --color-amber: #f97316;
+  --color-amber-glow: rgba(249, 115, 22, 0.25);
+
+  /* Erros & Passivos Críticos - Vermelho */
+  --color-error: #ef4444;
+  --color-error-light: #f87171;
+  --color-red: #ef4444;
+  --color-red-glow: rgba(239, 68, 68, 0.25);
+
+  /* Inteligência Artificial - Roxo & Magenta */
+  --color-ai-purple: #a855f7;
+  --color-ai-purple-light: #c084fc;
+  --color-ai-magenta: #ec4899;
+  --color-ai-magenta-light: #f472b6;
+  --color-ai-glow: rgba(168, 85, 247, 0.35);
+  --color-purple: #a855f7;
+  --color-purple-light: #c084fc;
+
+  /* Degradês de Assinatura */
+  --gradient-purple-cyan: linear-gradient(135deg, #a855f7 0%, #00f2fe 100%);
+  --gradient-purple-cyan-subtle: linear-gradient(135deg, rgba(168, 85, 247, 0.18) 0%, rgba(0, 242, 254, 0.12) 100%);
+  --gradient-purple-magenta: linear-gradient(135deg, #a855f7 0%, #ec4899 100%);
+  --gradient-cyan-blue: linear-gradient(135deg, #00f2fe 0%, #2563eb 100%);
+  --gradient-card-top-line: linear-gradient(90deg, transparent, rgba(168, 85, 247, 0.5), rgba(0, 242, 254, 0.8), transparent);
+
+  /* Tipografia: Textos brancos e secundárias em cinza médio */
+  --color-text-main: #ffffff;
+  --color-text-muted: #94a3b8;
+  --color-text-subtle: #64748b;
+
+  /* Escala de Espaçamento */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+
+  /* Sombras & Brilhos Neon */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.55);
+  --shadow-lg: 0 10px 32px rgba(0, 0, 0, 0.7);
+  --shadow-glow-cyan: 0 0 24px rgba(0, 242, 254, 0.25);
+  --shadow-glow-blue: 0 0 24px rgba(37, 99, 235, 0.25);
+  --shadow-glow-purple: 0 0 24px rgba(168, 85, 247, 0.25);
+
+  /* Cantos Arredondados */
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-full: 9999px;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 15px;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--color-background);
+  color: var(--color-text-main);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+  overflow-x: hidden;
+  background-image: 
+    radial-gradient(circle at 10% 8%, rgba(0, 242, 254, 0.05) 0%, transparent 42%),
+    radial-gradient(circle at 90% 82%, rgba(168, 85, 247, 0.05) 0%, transparent 48%),
+    radial-gradient(circle at 50% 35%, rgba(37, 99, 235, 0.03) 0%, transparent 55%);
+  background-attachment: fixed;
+}
+
+/* Tipografia */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  color: #ffffff;
+  line-height: 1.25;
+}
+
+p, span, label, input, button, select, textarea {
+  font-family: var(--font-body);
+}
+
+/* Scrollbar Customizada */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-surface-1);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-surface-3);
+  border-radius: var(--radius-xs);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-primary-dark);
+}
+
+/* Painéis de Vidro & Bento Cards */
+.glass-panel {
+  background: var(--color-card);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--color-card-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.glass-panel:hover {
+  border-color: var(--color-card-hover-border);
+}
+
+.bento-card {
+  background: var(--color-card);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--color-card-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-5);
+  box-shadow: var(--shadow-md);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.2s ease;
+}
+
+.bento-card:hover {
+  border-color: var(--color-card-hover-border);
+  box-shadow: var(--shadow-lg), var(--shadow-glow-cyan);
+  transform: translateY(-2px);
+}
+
+/* Linha superior com degradê discreto de roxo para ciano */
+.bento-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--gradient-card-top-line);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.bento-card:hover::after {
+  opacity: 1;
+}
+
+/* Card com destaque de IA */
+.ai-card {
+  background: var(--color-card);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(168, 85, 247, 0.25);
+  border-radius: var(--radius-md);
+  position: relative;
+  overflow: hidden;
+}
+
+.ai-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--gradient-purple-magenta);
+}
+
+/* Indicadores de Métricas */
+.metric-number {
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.15;
+}
+
+/* Badges de Status & Categorias */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  line-height: 1.3;
+}
+
+/* Destaque Ciano Neon */
+.badge-cyan {
+  background: rgba(0, 242, 254, 0.14);
+  color: #00f2fe;
+  border: 1px solid rgba(0, 242, 254, 0.35);
+}
+
+/* Gráficos / Azul Elétrico */
+.badge-blue {
+  background: rgba(37, 99, 235, 0.16);
+  color: #60a5fa;
+  border: 1px solid rgba(37, 99, 235, 0.35);
+}
+
+/* Resultados Positivos - Verde */
+.badge-green {
+  background: rgba(16, 185, 129, 0.14);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.35);
+}
+
+/* Alertas - Laranja */
+.badge-amber, .badge-orange {
+  background: rgba(249, 115, 22, 0.14);
+  color: #fb923c;
+  border: 1px solid rgba(249, 115, 22, 0.35);
+}
+
+/* Erros & Vencidos - Vermelho */
+.badge-red {
+  background: rgba(239, 68, 68, 0.14);
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.35);
+}
+
+/* Inteligência Artificial - Roxo */
+.badge-purple {
+  background: rgba(168, 85, 247, 0.16);
+  color: #c084fc;
+  border: 1px solid rgba(168, 85, 247, 0.35);
+}
+
+/* Inteligência Artificial - Magenta */
+.badge-magenta {
+  background: rgba(236, 72, 153, 0.16);
+  color: #f472b6;
+  border: 1px solid rgba(236, 72, 153, 0.35);
+}
+
+/* Badge Gradiente IA (Roxo para Ciano) */
+.badge-ai {
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.22) 0%, rgba(0, 242, 254, 0.2) 100%);
+  color: #00f2fe;
+  border: 1px solid rgba(0, 242, 254, 0.35);
+}
+
+/* Botões */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 38px;
+  padding: 8px 16px;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-body);
+  font-size: 0.84rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  white-space: nowrap;
+  user-select: none;
+}
+
+.btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 242, 254, 0.45);
+}
+
+/* Botão Primário em Ciano Neon com Contraste Alto */
+.btn-primary {
+  background: linear-gradient(135deg, #00f2fe 0%, #0891b2 100%);
+  color: #06080c;
+  font-weight: 700;
+  box-shadow: 0 2px 12px rgba(0, 242, 254, 0.35);
+}
+.btn-primary:hover {
+  background: linear-gradient(135deg, #38f9d7 0%, #00f2fe 100%);
+  box-shadow: 0 4px 22px rgba(0, 242, 254, 0.55);
+  transform: translateY(-1px);
+}
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+/* Botão Secundário em Cinza Escuro */
+.btn-secondary {
+  background: var(--color-surface-2);
+  color: var(--color-text-main);
+  border: 1px solid var(--color-border);
+}
+.btn-secondary:hover {
+  background: var(--color-surface-3);
+  border-color: rgba(0, 242, 254, 0.3);
+  transform: translateY(-1px);
+}
+.btn-secondary:active {
+  transform: translateY(0);
+}
+
+/* Botão Alerta / Laranja */
+.btn-gold, .btn-alert {
+  background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+  color: #ffffff;
+  box-shadow: 0 2px 10px rgba(249, 115, 22, 0.35);
+}
+.btn-gold:hover, .btn-alert:hover {
+  background: linear-gradient(135deg, #fb923c 0%, #f97316 100%);
+  transform: translateY(-1px);
+}
+
+/* Botão Outline Ciano Neon */
+.btn-outline {
+  background: transparent;
+  border: 1px solid rgba(0, 242, 254, 0.35);
+  color: #00f2fe;
+}
+.btn-outline:hover {
+  background: rgba(0, 242, 254, 0.12);
+  border-color: #00f2fe;
+  box-shadow: 0 0 14px rgba(0, 242, 254, 0.25);
+  transform: translateY(-1px);
+}
+
+/* Botão IA / Roxo para Ciano */
+.btn-ai {
+  background: linear-gradient(135deg, #a855f7 0%, #ec4899 50%, #00f2fe 100%);
+  color: #ffffff;
+  box-shadow: 0 2px 14px rgba(168, 85, 247, 0.35);
+}
+.btn-ai:hover {
+  box-shadow: 0 4px 22px rgba(168, 85, 247, 0.55), 0 0 16px rgba(0, 242, 254, 0.4);
+  transform: translateY(-1px);
+}
+
+/* Botão de Erro / Vermelho */
+.btn-danger {
+  background: rgba(239, 68, 68, 0.16);
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  color: #f87171;
+}
+.btn-danger:hover {
+  background: rgba(239, 68, 68, 0.28);
+}
+
+/* Formulários Modernos */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-label {
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  letter-spacing: 0.01em;
+}
+
+.form-input, .form-select, .form-textarea {
+  width: 100%;
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  color: #ffffff;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  outline: none;
+  transition: all 0.15s ease;
+}
+
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(0, 242, 254, 0.25);
+  background: var(--color-surface-3);
+}
+
+.form-input::placeholder, .form-textarea::placeholder {
+  color: var(--color-text-subtle);
+}
+
+/* Tabelas com Header Sticky & Scroll Responsivo */
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+}
+
+.modern-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+  text-align: left;
+}
+
+.modern-table th {
+  background: var(--color-surface-3);
+  color: #ffffff;
+  font-weight: 600;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--color-border);
+  white-space: nowrap;
+}
+
+.modern-table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--color-border);
+  color: var(--color-text-main);
+  transition: background 0.15s ease;
+}
+
+.modern-table tr:hover td {
+  background: rgba(255, 255, 255, 0.025);
+}
+
+/* Animação Waveform de Voz / IA */
+.audio-wave-bar {
+  width: 3px;
+  background-color: var(--color-primary);
+  border-radius: 2px;
+  animation: waveBar 0.8s infinite ease-in-out;
+}
+.audio-wave-bar:nth-child(2) { animation-delay: 0.15s; background-color: var(--color-ai-purple); }
+.audio-wave-bar:nth-child(3) { animation-delay: 0.3s; background-color: var(--color-ai-magenta); }
+.audio-wave-bar:nth-child(4) { animation-delay: 0.45s; background-color: var(--color-electric-blue-light); }
+.audio-wave-bar:nth-child(5) { animation-delay: 0.2s; background-color: var(--color-primary); }
+.audio-wave-bar:nth-child(6) { animation-delay: 0.35s; background-color: var(--color-ai-purple); }
+
+@keyframes waveBar {
+  0%, 100% { height: 6px; }
+  50% { height: 28px; }
+}
+
+/* Breakpoints Responsivos & Mobile Drawer */
+@media (max-width: 1023px) {
+  .desktop-sidebar {
+    display: none !important;
+  }
+  .mobile-drawer-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(8px);
+    z-index: 99;
+  }
+  .mobile-drawer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 290px;
+    background: #0f1218;
+    z-index: 100;
+    overflow-y: auto;
+    padding: 16px;
+    border-right: 1px solid rgba(0, 242, 254, 0.2);
+    box-shadow: 10px 0 30px rgba(0, 0, 0, 0.7);
+  }
+  .mobile-menu-btn {
+    display: inline-flex !important;
+  }
+}
+
+@media (min-width: 1024px) {
+  .mobile-menu-btn {
+    display: none !important;
+  }
+  .mobile-drawer, .mobile-drawer-backdrop {
+    display: none !important;
+  }
+}
+
+/* Print Stylesheet */
+@media print {
+  body {
+    background: #ffffff !important;
+    color: #111827 !important;
+    background-image: none !important;
+  }
+  .no-print {
+    display: none !important;
+  }
+  .glass-panel, .bento-card {
+    background: #ffffff !important;
+    border: 1px solid #e5e7eb !important;
+    box-shadow: none !important;
+    color: #111827 !important;
+  }
+  .metric-number {
+    color: #111827 !important;
+  }
+}
