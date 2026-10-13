@@ -17,6 +17,7 @@ import {
   ScenarioSimulation 
 } from '../types';
 import { FinancialEngine } from '../services/financialEngine';
+import { ProjectionChart } from '../components/ProjectionChart';
 
 interface ScenarioSimulatorViewProps {
   scenarios: ScenarioSimulation[];
@@ -358,6 +359,15 @@ export const ScenarioSimulatorView: React.FC<ScenarioSimulatorViewProps> = ({
           </div>
         </div>
 
+      </div>
+
+      {/* Gráfico de Projeção Financeira & Trajetória de Safra */}
+      <div className="bento-card">
+        <ProjectionChart 
+          scenarios={scenarios}
+          activeScenarioId={selectedScenarioId}
+          onScenarioSelect={(id) => setSelectedScenarioId(id)}
+        />
       </div>
 
       {/* Side-by-Side Comparison Table of All 5 Scenarios */}

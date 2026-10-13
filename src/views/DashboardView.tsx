@@ -1,5 +1,5 @@
 // Visão Executiva (Dashboard Bento Grid Cockpit) - Gran Bernardo Agro (UI/UX Pro Max)
-import React from 'react';
+import React, { useState } from 'react';
 import { 
   TrendingUp, 
   TrendingDown, 
@@ -26,6 +26,7 @@ import {
   RestructuringAction 
 } from '../types';
 import { FinancialEngine } from '../services/financialEngine';
+import { ProjectionChart } from '../components/ProjectionChart';
 
 interface DashboardViewProps {
   crops: CropPlanningItem[];
@@ -44,6 +45,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   actions,
   onNavigate
 }) => {
+  const [chartMode, setChartMode] = useState<'projection' | 'monthly'>('projection');
   // Cálculos consolidados
   const totalGrossRevenue = crops.reduce((acc, c) => acc + c.grossRevenue, 0);
   const totalOperatingCost = crops.reduce((acc, c) => acc + c.totalOperatingCost, 0);
@@ -205,125 +207,190 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
       {/* Main Section: Interactive Cash Flow Evolution Chart & Agronomic Break-even */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(420px, 1fr))', gap: '20px' }}>
         
-        {/* SVG Responsive Cash Flow Evolution Chart */}
-        <div className="bento-card">
+        {/* Responsive Projection Chart or Cash Flow Evolution Chart */}
+        <div className="bento-card" style={chartMode === 'projection' ? { gridColumn: '1 / -1' } : {}}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', flexWrap: 'wrap', gap: '10px' }}>
-            <div>
-              <h3 style={{ fontSize: '1.1rem', color: '#fff' }}>Evolução Mensal do Fluxo de Caixa</h3>
-              <p style={{ fontSize: '0.74rem', color: 'var(--color-text-muted)' }}>
-                Metodologia Gran Bernardo: Entradas Operacionais vs Desembolsos Totais
-              </p>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+              {/* Segmented Control */}
+              <div style={{
+                display: 'flex',
+                background: 'var(--color-surface-2)',
+                padding: '3px',
+                borderRadius: '8px',
+                border: '1px solid var(--color-border)',
+                gap: '3px'
+              }}>
+                <button
+                  onClick={() => setChartMode('projection')}
+                  style={{
+                    padding: '5px 12px',
+                    fontSize: '0.74rem',
+                    borderRadius: '6px',
+                    border: 'none',
+                    cursor: 'pointer',
+                    fontWeight: 600,
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '5px',
+                    background: chartMode === 'projection' ? '#00f2fe' : 'transparent',
+                    color: chartMode === 'projection' ? '#090b0e' : 'var(--color-text-muted)',
+                    transition: 'all 0.15s ease'
+                  }}
+                >
+                  <TrendingUp size={13} />
+                  <span>Projeção Plurianual (4 Safras)</span>
+                </button>
+                <button
+                  onClick={() => setChartMode('monthly')}
+                  style={{
+                    padding: '5px 12px',
+                    fontSize: '0.74rem',
+                    borderRadius: '6px',
+                    border: 'none',
+                    cursor: 'pointer',
+                    fontWeight: 600,
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '5px',
+                    background: chartMode === 'monthly' ? '#00f2fe' : 'transparent',
+                    color: chartMode === 'monthly' ? '#090b0e' : 'var(--color-text-muted)',
+                    transition: 'all 0.15s ease'
+                  }}
+                >
+                  <Calendar size={13} />
+                  <span>Fluxo Mensal (12M)</span>
+                </button>
+              </div>
+
+              {chartMode === 'monthly' && (
+                <span style={{ fontSize: '0.74rem', color: 'var(--color-text-muted)' }}>
+                  Entradas Operacionais vs Desembolsos Totais
+                </span>
+              )}
             </div>
-            <button onClick={() => onNavigate('cashflow')} className="btn btn-outline" style={{ fontSize: '0.74rem', padding: '5px 12px' }}>
-              Ver Matriz Completa
-            </button>
+
+            <div style={{ display: 'flex', gap: '8px' }}>
+              <button onClick={() => onNavigate('scenarios')} className="btn btn-outline" style={{ fontSize: '0.74rem', padding: '5px 12px' }}>
+                <Sliders size={13} color="#00f2fe" />
+                <span>Simulador de Cenários</span>
+              </button>
+              <button onClick={() => onNavigate('cashflow')} className="btn btn-outline" style={{ fontSize: '0.74rem', padding: '5px 12px' }}>
+                Ver Matriz Completa
+              </button>
+            </div>
           </div>
 
-          {/* SVG Container with Horizontal Scroll fallback on small mobile screens */}
-          <div style={{ width: '100%', overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
-            <div style={{ minWidth: '520px', height: '220px', position: 'relative' }}>
-              <svg 
-                viewBox="0 0 600 200" 
-                preserveAspectRatio="xMidYMid meet"
-                style={{ width: '100%', height: '100%', overflow: 'visible' }}
-              >
-                {/* Horizontal Baseline */}
-                <line x1="40" y1="160" x2="580" y2="160" stroke="rgba(255,255,255,0.14)" strokeWidth="1" />
+          {chartMode === 'projection' ? (
+            <ProjectionChart onScenarioSelect={() => onNavigate('scenarios')} />
+          ) : (
+            <>
+              {/* SVG Container with Horizontal Scroll fallback on small mobile screens */}
+              <div style={{ width: '100%', overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
+                <div style={{ minWidth: '520px', height: '220px', position: 'relative' }}>
+                  <svg 
+                    viewBox="0 0 600 200" 
+                    preserveAspectRatio="xMidYMid meet"
+                    style={{ width: '100%', height: '100%', overflow: 'visible' }}
+                  >
+                    {/* Horizontal Baseline */}
+                    <line x1="40" y1="160" x2="580" y2="160" stroke="rgba(255,255,255,0.14)" strokeWidth="1" />
 
-                {/* Grid Guidelines */}
-                <line x1="40" y1="110" x2="580" y2="110" stroke="rgba(255,255,255,0.06)" strokeDasharray="3,3" />
-                <line x1="40" y1="60" x2="580" y2="60" stroke="rgba(255,255,255,0.06)" strokeDasharray="3,3" />
+                    {/* Grid Guidelines */}
+                    <line x1="40" y1="110" x2="580" y2="110" stroke="rgba(255,255,255,0.06)" strokeDasharray="3,3" />
+                    <line x1="40" y1="60" x2="580" y2="60" stroke="rgba(255,255,255,0.06)" strokeDasharray="3,3" />
 
-                {/* Monthly Bars */}
-                {monthlySummaries.map((m, idx) => {
-                  const x = 50 + idx * 45;
-                  const inflowHeight = (m.inflows / maxMonthlyVal) * 120;
-                  const outflowHeight = ((m.outflowsOperating + m.debtService) / maxMonthlyVal) * 120;
+                    {/* Monthly Bars */}
+                    {monthlySummaries.map((m, idx) => {
+                      const x = 50 + idx * 45;
+                      const inflowHeight = (m.inflows / maxMonthlyVal) * 120;
+                      const outflowHeight = ((m.outflowsOperating + m.debtService) / maxMonthlyVal) * 120;
 
-                  return (
-                    <g key={m.month}>
-                      {/* Inflow Bar (Verde Positivo) */}
-                      <rect
-                        x={x}
-                        y={160 - inflowHeight}
-                        width="16"
-                        height={Math.max(inflowHeight, 2)}
-                        fill="#10b981"
-                        rx="3"
-                        opacity="0.9"
-                      />
-                      {/* Outflow Bar (Laranja Alerta) */}
-                      <rect
-                        x={x + 18}
-                        y={160 - outflowHeight}
-                        width="16"
-                        height={Math.max(outflowHeight, 2)}
-                        fill="#f97316"
-                        rx="3"
-                        opacity="0.9"
-                      />
-                      {/* Month Text */}
-                      <text
-                        x={x + 16}
-                        y="180"
-                        fill="#94a3b8"
-                        fontSize="10"
-                        textAnchor="middle"
-                        fontFamily="IBM Plex Sans, Inter"
-                      >
-                        {m.monthLabel.split('/')[0]}
-                      </text>
-                    </g>
-                  );
-                })}
+                      return (
+                        <g key={m.month}>
+                          {/* Inflow Bar (Verde Positivo) */}
+                          <rect
+                            x={x}
+                            y={160 - inflowHeight}
+                            width="16"
+                            height={Math.max(inflowHeight, 2)}
+                            fill="#10b981"
+                            rx="3"
+                            opacity="0.9"
+                          />
+                          {/* Outflow Bar (Laranja Alerta) */}
+                          <rect
+                            x={x + 18}
+                            y={160 - outflowHeight}
+                            width="16"
+                            height={Math.max(outflowHeight, 2)}
+                            fill="#f97316"
+                            rx="3"
+                            opacity="0.9"
+                          />
+                          {/* Month Text */}
+                          <text
+                            x={x + 16}
+                            y="180"
+                            fill="#94a3b8"
+                            fontSize="10"
+                            textAnchor="middle"
+                            fontFamily="IBM Plex Sans, Inter"
+                          >
+                            {m.monthLabel.split('/')[0]}
+                          </text>
+                        </g>
+                      );
+                    })}
 
-                {/* Cash Balance Line Path (Azul Elétrico nos Gráficos) */}
-                <polyline
-                  fill="none"
-                  stroke="#2563eb"
-                  strokeWidth="2.5"
-                  points={monthlySummaries.map((m, idx) => {
-                    const x = 50 + idx * 45 + 16;
-                    const y = Math.max(20, Math.min(160, 140 - (m.endingBalance / maxMonthlyVal) * 100));
-                    return `${x},${y}`;
-                  }).join(' ')}
-                />
-
-                {/* Cash Balance Dots (Ciano Neon / Vermelho Erro) */}
-                {monthlySummaries.map((m, idx) => {
-                  const x = 50 + idx * 45 + 16;
-                  const y = Math.max(20, Math.min(160, 140 - (m.endingBalance / maxMonthlyVal) * 100));
-                  return (
-                    <circle
-                      key={`dot-${m.month}`}
-                      cx={x}
-                      cy={y}
-                      r="4"
-                      fill={m.endingBalance >= 0 ? '#00f2fe' : '#ef4444'}
-                      stroke="#0b0d11"
-                      strokeWidth="2"
+                    {/* Cash Balance Line Path (Azul Elétrico nos Gráficos) */}
+                    <polyline
+                      fill="none"
+                      stroke="#2563eb"
+                      strokeWidth="2.5"
+                      points={monthlySummaries.map((m, idx) => {
+                        const x = 50 + idx * 45 + 16;
+                        const y = Math.max(20, Math.min(160, 140 - (m.endingBalance / maxMonthlyVal) * 100));
+                        return `${x},${y}`;
+                      }).join(' ')}
                     />
-                  );
-                })}
-              </svg>
-            </div>
-          </div>
 
-          {/* Chart Legend */}
-          <div style={{ display: 'flex', justifyContent: 'center', gap: '18px', marginTop: '12px', fontSize: '0.74rem', flexWrap: 'wrap' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <span style={{ width: '10px', height: '10px', borderRadius: '3px', background: '#10b981' }} />
-              <span style={{ color: 'var(--color-text-muted)' }}>Entradas (Resultados Positivos)</span>
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <span style={{ width: '10px', height: '10px', borderRadius: '3px', background: '#f97316' }} />
-              <span style={{ color: 'var(--color-text-muted)' }}>Desembolsos (Alertas de Saída)</span>
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <span style={{ width: '14px', height: '3px', background: '#2563eb', borderRadius: '2px' }} />
-              <span style={{ color: 'var(--color-text-muted)' }}>Saldo Acumulado (Azul Elétrico)</span>
-            </div>
-          </div>
+                    {/* Cash Balance Dots (Ciano Neon / Vermelho Erro) */}
+                    {monthlySummaries.map((m, idx) => {
+                      const x = 50 + idx * 45 + 16;
+                      const y = Math.max(20, Math.min(160, 140 - (m.endingBalance / maxMonthlyVal) * 100));
+                      return (
+                        <circle
+                          key={`dot-${m.month}`}
+                          cx={x}
+                          cy={y}
+                          r="4"
+                          fill={m.endingBalance >= 0 ? '#00f2fe' : '#ef4444'}
+                          stroke="#0b0d11"
+                          strokeWidth="2"
+                        />
+                      );
+                    })}
+                  </svg>
+                </div>
+              </div>
+
+              {/* Chart Legend */}
+              <div style={{ display: 'flex', justifyContent: 'center', gap: '18px', marginTop: '12px', fontSize: '0.74rem', flexWrap: 'wrap' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <span style={{ width: '10px', height: '10px', borderRadius: '3px', background: '#10b981' }} />
+                  <span style={{ color: 'var(--color-text-muted)' }}>Entradas (Resultados Positivos)</span>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <span style={{ width: '10px', height: '10px', borderRadius: '3px', background: '#f97316' }} />
+                  <span style={{ color: 'var(--color-text-muted)' }}>Desembolsos (Alertas de Saída)</span>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <span style={{ width: '14px', height: '3px', background: '#2563eb', borderRadius: '2px' }} />
+                  <span style={{ color: 'var(--color-text-muted)' }}>Saldo Acumulado (Azul Elétrico)</span>
+                </div>
+              </div>
+            </>
+          )}
         </div>
 
         {/* Agronomic Break-Even & Safety Margin Cards */}
