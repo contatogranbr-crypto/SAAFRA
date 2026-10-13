@@ -70,124 +70,93 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
       
-      {/* Top Banner / Welcome Advisory Cockpit */}
-      <div className="bento-card" style={{
-        padding: '20px 24px',
+      {/* Sleek Minimalist Executive Header */}
+      <div style={{
         display: 'flex',
-        alignItems: 'center',
+        alignItems: 'flex-end',
         justifyContent: 'space-between',
         flexWrap: 'wrap',
-        gap: '16px',
-        background: 'linear-gradient(135deg, rgba(22, 25, 34, 0.95) 0%, rgba(16, 19, 25, 0.98) 100%)',
-        borderLeft: '4px solid #00f2fe',
-        border: '1px solid rgba(0, 242, 254, 0.2)'
+        gap: '14px',
+        padding: '4px 0 12px',
+        borderBottom: '1px solid var(--color-border)'
       }}>
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-            <span className="badge badge-cyan" style={{ fontSize: '0.68rem' }}>
+            <span style={{ fontSize: '0.72rem', color: '#00f2fe', fontWeight: 600, letterSpacing: '0.04em', textTransform: 'uppercase' }}>
               Safra Ativa 2024/2025
             </span>
-            <span style={{ fontSize: '0.75rem', color: 'var(--color-text-subtle)' }}>•</span>
-            <span style={{ fontSize: '0.78rem', color: '#00f2fe', fontWeight: 600 }}>
+            <span style={{ color: 'var(--color-text-subtle)' }}>•</span>
+            <span style={{ fontSize: '0.74rem', color: 'var(--color-text-muted)' }}>
               2.450 ha totais / 2.800 ha cultivados
             </span>
           </div>
-          <h2 style={{ fontSize: '1.4rem', color: '#ffffff', letterSpacing: '-0.03em' }}>
-            Painel Executivo de Gestão & Reestruturação
-          </h2>
-          <p style={{ color: 'var(--color-text-muted)', fontSize: '0.82rem', marginTop: '2px' }}>
-            Grupo Agropecuário Santa Maria • Consultor Técnico: <strong style={{ color: '#fff' }}>Dr. Roberto Bernardo</strong>
+          <h1 style={{ fontSize: '1.45rem', fontWeight: 800, color: '#ffffff', letterSpacing: '-0.025em' }}>
+            Visão Executiva & Reestruturação
+          </h1>
+          <p style={{ color: 'var(--color-text-muted)', fontSize: '0.8rem', marginTop: '2px' }}>
+            Grupo Agropecuário Santa Maria • Consultor: <strong style={{ color: '#fff' }}>Dr. Roberto Bernardo</strong>
           </p>
         </div>
 
-        {/* Quick Actions Bar */}
-        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', gap: '8px' }}>
           <button onClick={() => onNavigate('import_center')} className="btn btn-secondary">
-            <FileSpreadsheet size={15} color="#00f2fe" />
+            <FileSpreadsheet size={14} color="#00f2fe" />
             <span>Upload Planilha</span>
           </button>
-          <button onClick={() => onNavigate('ai_advisor')} className="btn btn-outline" style={{ background: 'linear-gradient(135deg, rgba(168, 85, 247, 0.15) 0%, rgba(0, 242, 254, 0.12) 100%)' }}>
-            <Bot size={15} color="#00f2fe" />
-            <span>Consultar IA</span>
-          </button>
-          <button onClick={() => onNavigate('scenarios')} className="btn btn-secondary">
-            <Sliders size={15} color="#f97316" />
-            <span>Simular Quebra</span>
-          </button>
           <button onClick={() => onNavigate('reports')} className="btn btn-primary">
-            <FileText size={15} />
-            <span>Dossiê PDF</span>
+            <FileText size={14} />
+            <span>Dossiê Executivo</span>
           </button>
         </div>
       </div>
 
-      {/* Bento Grid: 5 Core Financial KPIs */}
+      {/* Clean Bento Grid: 5 Core Financial KPIs */}
       <div style={{
         display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(210px, 1fr))',
         gap: '14px'
       }}>
         
         {/* KPI 1: Receita Bruta */}
         <div className="bento-card">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-            <span style={{ fontSize: '0.74rem', color: 'var(--color-text-subtle)', fontWeight: 700, letterSpacing: '0.04em' }}>
-              RECEITA BRUTA DA SAFRA
+            <span style={{ fontSize: '0.72rem', color: 'var(--color-text-muted)', fontWeight: 600, letterSpacing: '0.04em' }}>
+              RECEITA BRUTA SAFRA
             </span>
-            <div style={{
-              width: '32px',
-              height: '32px',
-              borderRadius: '8px',
-              background: 'rgba(0, 242, 254, 0.14)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center'
-            }}>
-              <TrendingUp size={16} color="#00f2fe" />
-            </div>
+            <TrendingUp size={16} color="#00f2fe" />
           </div>
           <div className="metric-number" style={{ fontSize: '1.65rem', color: '#ffffff' }}>
             R$ {(totalGrossRevenue / 1000000).toFixed(2)}M
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '5px', marginTop: '6px', fontSize: '0.74rem', color: '#10b981' }}>
-            <ArrowUpRight size={14} />
-            <span>Soja + Milho (214.400 sacas)</span>
+            <ArrowUpRight size={13} />
+            <span>214.400 sacas (Soja + Milho)</span>
           </div>
         </div>
 
         {/* KPI 2: Custos de Produção */}
         <div className="bento-card">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-            <span style={{ fontSize: '0.74rem', color: 'var(--color-text-subtle)', fontWeight: 700, letterSpacing: '0.04em' }}>
-              CUSTOS TOTAIS PROD.
+            <span style={{ fontSize: '0.72rem', color: 'var(--color-text-muted)', fontWeight: 600, letterSpacing: '0.04em' }}>
+              CUSTOS OPERACIONAIS
             </span>
-            <div style={{
-              width: '32px',
-              height: '32px',
-              borderRadius: '8px',
-              background: 'rgba(249, 115, 22, 0.14)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center'
-            }}>
-              <DollarSign size={16} color="#f97316" />
-            </div>
+            <DollarSign size={16} color="#f97316" />
           </div>
           <div className="metric-number" style={{ fontSize: '1.65rem', color: '#ffffff' }}>
             R$ {(totalOperatingCost / 1000000).toFixed(2)}M
           </div>
           <div style={{ fontSize: '0.74rem', color: 'var(--color-text-muted)', marginTop: '6px' }}>
-            Insumos, Máquinas, Fretes e Folha
+            Insumos, Máquinas e Frete
           </div>
         </div>
 
         {/* KPI 3: Margem Bruta */}
         <div className="bento-card">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-            <span style={{ fontSize: '0.74rem', color: 'var(--color-text-subtle)', fontWeight: 700, letterSpacing: '0.04em' }}>
-              MARGEM BRUTA OPERACIONAL
+            <span style={{ fontSize: '0.72rem', color: 'var(--color-text-muted)', fontWeight: 600, letterSpacing: '0.04em' }}>
+              MARGEM BRUTA
             </span>
-            <span className="badge badge-green" style={{ fontSize: '0.68rem' }}>
+            <span className="badge badge-green" style={{ fontSize: '0.65rem' }}>
               {marginPercent.toFixed(1)}%
             </span>
           </div>
@@ -195,55 +164,35 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             R$ {(grossMargin / 1000000).toFixed(2)}M
           </div>
           <div style={{ fontSize: '0.74rem', color: 'var(--color-text-muted)', marginTop: '6px' }}>
-            Faturamento Líquido - Custos Diretos
+            Resultado Líquido Direto
           </div>
         </div>
 
         {/* KPI 4: Saldo Final de Caixa */}
         <div className="bento-card">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-            <span style={{ fontSize: '0.74rem', color: 'var(--color-text-subtle)', fontWeight: 700, letterSpacing: '0.04em' }}>
-              SALDO CAIXA FINAL (SET/25)
+            <span style={{ fontSize: '0.72rem', color: 'var(--color-text-muted)', fontWeight: 600, letterSpacing: '0.04em' }}>
+              SALDO CAIXA (SET/25)
             </span>
-            <div style={{
-              width: '32px',
-              height: '32px',
-              borderRadius: '8px',
-              background: endingCash >= 0 ? 'rgba(16, 185, 129, 0.16)' : 'rgba(239, 68, 68, 0.16)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center'
-            }}>
-              {endingCash >= 0 ? <TrendingUp size={16} color="#34d399" /> : <TrendingDown size={16} color="#f87171" />}
-            </div>
+            {endingCash >= 0 ? <TrendingUp size={16} color="#10b981" /> : <TrendingDown size={16} color="#ef4444" />}
           </div>
-          <div className="metric-number" style={{ fontSize: '1.65rem', color: endingCash >= 0 ? '#ffffff' : '#f87171' }}>
+          <div className="metric-number" style={{ fontSize: '1.65rem', color: endingCash >= 0 ? '#ffffff' : '#ef4444' }}>
             R$ {(endingCash / 1000).toFixed(0)} mil
           </div>
-          <div style={{ fontSize: '0.74rem', color: worstCashMonth.endingBalance < 0 ? '#f87171' : 'var(--color-text-muted)', marginTop: '6px' }}>
-            {worstCashMonth.endingBalance < 0 ? `Atenção: Gargalo em ${worstCashMonth.monthLabel}` : 'Fluxo positivo acumulado'}
+          <div style={{ fontSize: '0.74rem', color: worstCashMonth.endingBalance < 0 ? '#ef4444' : 'var(--color-text-muted)', marginTop: '6px' }}>
+            {worstCashMonth.endingBalance < 0 ? `Gargalo previsto em ${worstCashMonth.monthLabel}` : 'Fluxo de caixa positivo'}
           </div>
         </div>
 
         {/* KPI 5: Passivo Bancário */}
         <div className="bento-card">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-            <span style={{ fontSize: '0.74rem', color: 'var(--color-text-subtle)', fontWeight: 700, letterSpacing: '0.04em' }}>
-              PASSIVO TOTAL BANCÁRIO
+            <span style={{ fontSize: '0.72rem', color: 'var(--color-text-muted)', fontWeight: 600, letterSpacing: '0.04em' }}>
+              PASSIVO BANCÁRIO
             </span>
-            <div style={{
-              width: '32px',
-              height: '32px',
-              borderRadius: '8px',
-              background: 'rgba(239, 68, 68, 0.16)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center'
-            }}>
-              <Landmark size={16} color="#f87171" />
-            </div>
+            <Landmark size={16} color="#ef4444" />
           </div>
-          <div className="metric-number" style={{ fontSize: '1.65rem', color: '#f87171' }}>
+          <div className="metric-number" style={{ fontSize: '1.65rem', color: '#ef4444' }}>
             R$ {(debtMetrics.totalBalance / 1000000).toFixed(2)}M
           </div>
           <div style={{ fontSize: '0.74rem', color: 'var(--color-text-muted)', marginTop: '6px' }}>

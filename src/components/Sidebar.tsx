@@ -275,7 +275,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 borderRadius: 'var(--radius-sm)',
                 border: 'none',
                 background: isActive 
-                  ? 'linear-gradient(90deg, rgba(0, 242, 254, 0.16) 0%, rgba(168, 85, 247, 0.08) 100%)' 
+                  ? 'rgba(0, 242, 254, 0.08)' 
                   : 'transparent',
                 color: isActive ? '#00f2fe' : 'var(--color-text-muted)',
                 fontWeight: isActive ? 600 : 500,
@@ -284,11 +284,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 transition: 'all 0.16s ease',
                 textAlign: 'left',
                 borderLeft: isActive ? '3px solid #00f2fe' : '3px solid transparent',
-                minHeight: '40px'
+                minHeight: '38px'
               }}
               onMouseEnter={(e) => {
                 if (!isActive) {
-                  e.currentTarget.style.background = 'rgba(255, 255, 255, 0.04)';
+                  e.currentTarget.style.background = 'rgba(255, 255, 255, 0.03)';
                   e.currentTarget.style.color = '#ffffff';
                 }
               }}
@@ -316,20 +316,20 @@ export const Sidebar: React.FC<SidebarProps> = ({
       </div>
 
       {/* Advisory Support Mini Card */}
-      <div className={isMobileDrawer ? '' : 'glass-panel'} style={{
+      <div style={{
         padding: '12px 14px',
         fontSize: '0.74rem',
-        borderLeft: '3px solid #00f2fe',
-        border: '1px solid rgba(0, 242, 254, 0.16)',
-        background: 'linear-gradient(135deg, rgba(168, 85, 247, 0.12) 0%, rgba(0, 242, 254, 0.08) 100%)',
+        borderLeft: '2px solid #00f2fe',
+        border: '1px solid var(--color-border)',
+        background: 'var(--color-surface-2)',
         borderRadius: 'var(--radius-sm)',
         marginTop: 'auto'
       }}>
-        <div style={{ fontWeight: 700, color: '#00f2fe', marginBottom: '2px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+        <div style={{ fontWeight: 700, color: '#ffffff', marginBottom: '2px' }}>
           <span>Metodologia Gran Bernardo</span>
         </div>
         <p style={{ color: 'var(--color-text-muted)', lineHeight: 1.4 }}>
-          Consultoria & Reestruturação Rural Especializada
+          Consultoria & Reestruturação Rural
         </p>
       </div>
     </div>

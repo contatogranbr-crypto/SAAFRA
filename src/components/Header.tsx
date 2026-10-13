@@ -49,9 +49,9 @@ export const Header: React.FC<HeaderProps> = ({
   };
 
   return (
-    <header className="glass-panel" style={{
-      margin: '12px 16px',
-      padding: '10px 16px',
+    <header style={{
+      margin: '12px 16px 14px',
+      padding: '10px 18px',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'space-between',
@@ -59,6 +59,8 @@ export const Header: React.FC<HeaderProps> = ({
       position: 'sticky',
       top: '12px',
       zIndex: 50,
+      background: 'var(--color-card)',
+      border: '1px solid var(--color-border)',
       borderRadius: 'var(--radius-md)'
     }}>
       {/* Brand & Mobile Hamburger */}
@@ -69,51 +71,50 @@ export const Header: React.FC<HeaderProps> = ({
           className="btn btn-secondary mobile-menu-btn"
           style={{
             padding: '8px',
-            minHeight: '38px',
-            width: '38px',
+            minHeight: '36px',
+            width: '36px',
             alignItems: 'center',
             justifyContent: 'center'
           }}
           aria-label={isMobileMenuOpen ? 'Fechar menu de navegação' : 'Abrir menu de navegação'}
         >
-          {isMobileMenuOpen ? <X size={20} color="#00f2fe" /> : <Menu size={20} color="#00f2fe" />}
+          {isMobileMenuOpen ? <X size={18} color="#00f2fe" /> : <Menu size={18} color="#00f2fe" />}
         </button>
 
         {/* Vector Logo Badge */}
         <div style={{
-          width: '38px',
-          height: '38px',
-          borderRadius: '10px',
-          background: 'linear-gradient(135deg, #a855f7 0%, #00f2fe 100%)',
+          width: '36px',
+          height: '36px',
+          borderRadius: '9px',
+          background: 'rgba(0, 242, 254, 0.1)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          boxShadow: '0 0 16px rgba(0, 242, 254, 0.4)',
-          border: '1px solid rgba(0, 242, 254, 0.4)',
+          border: '1px solid rgba(0, 242, 254, 0.25)',
           flexShrink: 0
         }}>
-          <Sprout size={20} color="#ffffff" />
+          <Sprout size={18} color="#00f2fe" />
         </div>
 
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <span style={{ fontSize: '1.1rem', fontWeight: 800, letterSpacing: '-0.03em', color: '#ffffff' }}>
+            <span style={{ fontSize: '1.05rem', fontWeight: 800, letterSpacing: '-0.03em', color: '#ffffff' }}>
               GRAN BERNARDO
             </span>
             <span style={{ 
               color: '#00f2fe', 
-              fontSize: '0.68rem', 
+              fontSize: '0.65rem', 
               fontWeight: 800, 
-              background: 'rgba(0, 242, 254, 0.12)',
+              background: 'rgba(0, 242, 254, 0.1)',
               padding: '2px 5px',
               borderRadius: '4px',
-              border: '1px solid rgba(0, 242, 254, 0.35)',
+              border: '1px solid rgba(0, 242, 254, 0.25)',
               letterSpacing: '0.05em'
             }}>
               AGRO
             </span>
           </div>
-          <p style={{ fontSize: '0.7rem', color: 'var(--color-text-muted)', lineHeight: 1.2 }}>
+          <p style={{ fontSize: '0.68rem', color: 'var(--color-text-muted)', lineHeight: 1.2 }}>
             Consultoria Financeira & Reestruturação
           </p>
         </div>
@@ -194,17 +195,12 @@ export const Header: React.FC<HeaderProps> = ({
         {/* Quick Voice / AI button */}
         <button
           onClick={onOpenAiChat}
-          className="btn btn-outline"
-          style={{ 
-            padding: '6px 12px', 
-            fontSize: '0.78rem',
-            background: 'linear-gradient(135deg, rgba(168, 85, 247, 0.18) 0%, rgba(0, 242, 254, 0.14) 100%)',
-            border: '1px solid rgba(0, 242, 254, 0.4)'
-          }}
+          className="btn btn-secondary"
+          style={{ padding: '6px 12px', fontSize: '0.78rem' }}
           title="Falar ou digitar para o Assistente IA"
         >
           <Mic size={14} color="#00f2fe" />
-          <span style={{ color: '#00f2fe' }}>Falar com IA</span>
+          <span>Falar com IA</span>
         </button>
 
         {/* Desktop Controls (Import, Role) */}
