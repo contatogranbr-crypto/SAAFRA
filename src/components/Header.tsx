@@ -10,7 +10,8 @@ import {
   Menu,
   X,
   Sprout,
-  LogOut
+  LogOut,
+  Database
 } from 'lucide-react';
 import { FarmProperty, UserProfile, UserRole } from '../types';
 
@@ -28,6 +29,7 @@ interface HeaderProps {
   isMobileMenuOpen: boolean;
   onToggleMobileMenu: () => void;
   onLogout?: () => void;
+  isSupabaseConnected?: boolean;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -200,8 +202,28 @@ export const Header: React.FC<HeaderProps> = ({
           <span>Falar com IA</span>
         </button>
 
-        {/* Desktop Controls (Import, Role) */}
+        {/* Desktop Controls (Import, Role, Cloud) */}
         <div className="desktop-controls" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          {/* Supabase Status Pill */}
+          <div 
+            title="Banco de Dados Supabase (appruralteste) Conectado"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              background: 'rgba(16, 185, 129, 0.08)',
+              border: '1px solid rgba(16, 185, 129, 0.25)',
+              borderRadius: 'var(--radius-sm)',
+              padding: '4px 10px',
+              height: '34px',
+              cursor: 'default'
+            }}
+          >
+            <span style={{ width: '7px', height: '7px', borderRadius: '50%', background: '#10b981', boxShadow: '0 0 6px #10b981' }} />
+            <Database size={13} color="#10b981" />
+            <span style={{ fontSize: '0.74rem', color: '#10b981', fontWeight: 600 }}>Supabase</span>
+          </div>
+
           <button
             onClick={onOpenImport}
             className="btn btn-secondary"

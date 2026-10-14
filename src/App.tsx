@@ -1,5 +1,5 @@
 // Master Application Component - Gran Bernardo Agro
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Header } from './components/Header';
 import { Sidebar, NavTab } from './components/Sidebar';
 
@@ -32,6 +32,7 @@ import {
   INITIAL_AGENT_CONFIG 
 } from './data/initialData';
 import { FinancialEngine } from './services/financialEngine';
+import { SupabaseService } from './services/supabaseClient';
 import { 
   CashFlowEntry, 
   CropPlanningItem, 
@@ -52,6 +53,18 @@ export function App() {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
     return localStorage.getItem('gb_auth') === 'true';
   });
+
+  // Supabase Connection State
+  const [isSupabaseConnected, setIsSupabaseConnected] = useState<boolean>(true);
+
+  useEffect(() => {
+    SupabaseService.testConnection().then(res => {
+      setIsSupabaseConnected(res.success);
+      if (res.success) {
+        console.log('🟢 Supabase conectado com sucesso:', res.message);
+      }
+    });
+  }, []);
 
   // Navigation & User Profile State
   const [activeTab, setActiveTab] = useState<NavTab>('dashboard');
@@ -100,6 +113,7 @@ export function App() {
 
   const handleAddEntry = (entry: CashFlowEntry) => {
     setCashFlow(prev => [entry, ...prev]);
+    SupabaseService.syncCashFlowEntry(entry);
     const log: AuditLog = {
       id: `log-${Date.now()}`,
       timestamp: new Date().toISOString().replace('T', ' ').slice(0, 19),
@@ -118,11 +132,13 @@ export function App() {
 
   const handleUpdateEntry = (entry: CashFlowEntry) => {
     setCashFlow(prev => prev.map(e => e.id === entry.id ? entry : e));
+    SupabaseService.syncCashFlowEntry(entry);
   };
 
   const handleConfirmAiTransaction = (entry: CashFlowEntry, log: AuditLog) => {
     setCashFlow(prev => [entry, ...prev]);
     setAuditLogs(prev => [log, ...prev]);
+    SupabaseService.syncCashFlowEntry(entry);
   };
 
   const handleImportConfirmed = (newEntries: CashFlowEntry[], batch: ImportBatch, log: AuditLog) => {
@@ -283,6 +299,7 @@ export function App() {
         isMobileMenuOpen={isMobileMenuOpen}
         onToggleMobileMenu={() => setIsMobileMenuOpen(prev => !prev)}
         onLogout={handleLogout}
+        isSupabaseConnected={isSupabaseConnected}
       />
 
       {/* Mobile Drawer (When Open on Mobile / Tablet) */}
