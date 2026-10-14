@@ -173,7 +173,10 @@ export const ImportCenterView: React.FC<ImportCenterViewProps> = ({
       financiamento_investimento: 'Financiamento de Investimento / Máquinas',
       juros_encargos_bancarios: 'Juros e Encargos Bancários',
       liquidacao_cpr_barter: 'Liquidação de Barter / CPR',
-      dividas_renegociadas: 'Passivos e Dívidas Renegociadas'
+      dividas_renegociadas: 'Passivos e Dívidas Renegociadas',
+      silo_armazenagem: 'Silos e Armazenagem (Klepper)',
+      emprestimo_terceiros: 'Empréstimos de Terceiros / Mútuo',
+      cessao_credito_bunge: 'Cessão de Crédito / Barter Bunge'
     };
 
     setPreviewRows(prev => prev.map(r => {

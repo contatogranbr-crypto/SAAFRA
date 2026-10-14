@@ -16,6 +16,7 @@ import { RestructuringPlanView } from './views/RestructuringPlanView';
 import { ExecutiveReportsView } from './views/ExecutiveReportsView';
 import { FarmsAndClientsView } from './views/FarmsAndClientsView';
 import { AgentTrainerView } from './views/AgentTrainerView';
+import { AuthView } from './views/AuthView';
 
 // Initial Data & Financial Engine
 import { 
@@ -47,11 +48,16 @@ import {
 } from './types';
 
 export function App() {
+  // Authentication State (Login & Criação de Conta)
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
+    return localStorage.getItem('gb_auth') === 'true';
+  });
+
   // Navigation & User Profile State
   const [activeTab, setActiveTab] = useState<NavTab>('dashboard');
   const [currentUser, setCurrentUser] = useState<UserProfile>(INITIAL_USER);
   const [currentSafra, setCurrentSafra] = useState<string>('2024/2025');
-  const [selectedFarmId, setSelectedFarmId] = useState<string>('farm-01');
+  const [selectedFarmId, setSelectedFarmId] = useState<string>('all');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
 
   // Core Data Collections
@@ -239,6 +245,23 @@ export function App() {
     setSelectedFarmId(farm.id);
   };
 
+  // Auth Handlers
+  const handleLoginSuccess = (user: UserProfile) => {
+    setCurrentUser(user);
+    localStorage.setItem('gb_auth', 'true');
+    setIsAuthenticated(true);
+  };
+
+  const handleLogout = () => {
+    localStorage.setItem('gb_auth', 'false');
+    setIsAuthenticated(false);
+  };
+
+  // Render AuthView if not logged in
+  if (!isAuthenticated) {
+    return <AuthView onLoginSuccess={handleLoginSuccess} />;
+  }
+
   const pendingActionsCount = actions.filter(a => a.status !== 'concluido').length;
   const criticalAlertsCount = autonomousRisks.filter(r => r.severity === 'critical' || r.severity === 'high').length;
 
@@ -259,6 +282,7 @@ export function App() {
         onOpenImport={() => { setActiveTab('import_center'); setIsMobileMenuOpen(false); }}
         isMobileMenuOpen={isMobileMenuOpen}
         onToggleMobileMenu={() => setIsMobileMenuOpen(prev => !prev)}
+        onLogout={handleLogout}
       />
 
       {/* Mobile Drawer (When Open on Mobile / Tablet) */}
@@ -308,8 +332,9 @@ export function App() {
         {/* View Port Content */}
         <main style={{
           flex: 1,
-          padding: '0 20px 24px 8px',
-          overflowX: 'hidden'
+          padding: '24px 32px 32px 24px',
+          overflowX: 'hidden',
+          maxWidth: '1600px'
         }}>
           {activeTab === 'dashboard' && (
             <DashboardView
@@ -318,6 +343,9 @@ export function App() {
               debts={debts}
               risks={autonomousRisks}
               actions={actions}
+              farms={farms}
+              selectedFarmId={selectedFarmId}
+              onFarmChange={setSelectedFarmId}
               onNavigate={(tab) => setActiveTab(tab)}
             />
           )}
@@ -349,15 +377,20 @@ export function App() {
             />
           )}
 
-          {activeTab === 'ai_advisor' && (
+          {/* Mantém a visualização da IA montada para alternar abas sem perda de histórico, estado ou digitação */}
+          <div style={{ display: activeTab === 'ai_advisor' ? 'block' : 'none' }}>
             <AiAdvisorView
               cashFlow={cashFlow}
               crops={crops}
               debts={debts}
               currentSafra={currentSafra}
               onConfirmTransaction={handleConfirmAiTransaction}
+              onAddDebt={handleAddDebt}
+              currentUser={currentUser}
+              selectedFarmId={selectedFarmId}
+              farms={farms}
             />
-          )}
+          </div>
 
           {activeTab === 'import_center' && (
             <ImportCenterView

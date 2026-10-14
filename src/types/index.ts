@@ -59,9 +59,13 @@ export type CashFlowCategory =
   | 'financiamento_investimento'
   | 'juros_encargos_bancarios'
   | 'liquidacao_cpr_barter'
-  | 'dividas_renegociadas';
+  | 'dividas_renegociadas'
+  | 'arrendamento_terras'
+  | 'silo_armazenagem'
+  | 'emprestimo_terceiros'
+  | 'cessao_credito_bunge';
 
-export type EntryStatus = 'previsto' | 'realizado' | 'vencido' | 'renegociado' | 'projetado';
+export type EntryStatus = 'previsto' | 'realizado' | 'vencido' | 'renegociado' | 'projetado' | 'em_prorrogacao';
 export type EntryType = 'inflow' | 'outflow';
 
 export interface CashFlowEntry {
@@ -82,6 +86,8 @@ export interface CashFlowEntry {
   notes?: string;
   confidence?: number; // 0 to 100%
   source: 'import_excel' | 'ai_assistant' | 'manual' | 'ocr_doc';
+  equivalentSacks?: number; // Sacas de soja equivalentes
+  groupClassification?: 'despesa_fixa' | 'despesa_variavel' | 'mao_de_obra' | 'fornecedor' | 'banco' | 'arrendamento' | 'silo' | 'emprestimo_terceiros' | 'entrada';
 }
 
 export interface CashFlowMonthlySummary {
@@ -121,14 +127,17 @@ export interface CropPlanningItem {
 }
 
 export type DebtTerm = 'curto' | 'medio' | 'longo';
-export type DebtStatus = 'normal' | 'vencida' | 'prorrogada' | 'renegociada';
+export type DebtStatus = 'normal' | 'vencida' | 'prorrogada' | 'renegociada' | 'em_prorrogacao';
 
 export interface DebtLiability {
   id: string;
   creditor: string; // Banco do Brasil, Sicredi, Bayer, Syngenta, etc.
   creditorType: 'Banco Comercial' | 'Cooperativa de Crédito' | 'Trading / Revenda' | 'Fornecedor' | 'Outro';
-  operationType: 'Custeio Agrícola' | 'Finame / Máquinas' | 'CPR Financeira' | 'Barter Insumos' | 'Capital de Giro';
+  operationType: 'Custeio Agrícola' | 'Finame / Máquinas' | 'CPR Financeira' | 'Barter Insumos' | 'Capital de Giro' | 'Financiamento Investimento' | 'Armazenagem Silos' | string;
   contractNumber: string;
+  cedulaNumber?: string;
+  beneficiaryName?: string;
+  isUnderMcrProrrogation?: boolean; // Prorrogação em andamento MCR 2.6.9
   originalAmount: number;
   currentBalance: number;
   annualInterestRate: number; // % a.a.
@@ -141,6 +150,7 @@ export interface DebtLiability {
   guarantees: string; // Penhor de Grãos, Hipoteca da Fazenda, Aval dos Sócios
   relatedSafra: string;
   farmId: string;
+  equivalentSacksSoja?: number; // Sacas de soja equivalentes
 }
 
 export interface RiskAlert {
@@ -216,6 +226,7 @@ export interface ProposedTransaction {
   description: string;
   confidence: number;
   sourceText: string;
+  farmId?: string;
 }
 
 export interface KnowledgeTopic {
@@ -246,6 +257,33 @@ export interface AgentConfig {
   trainingExamples: AgentTrainingExample[];
 }
 
+export interface ChatAttachment {
+  name: string;
+  type: 'image' | 'spreadsheet' | 'pdf' | 'document';
+  size: string;
+  base64Data?: string;
+  textContent?: string;
+  previewUrl?: string;
+}
+
+export interface ProposedDebtAction {
+  creditor: string;
+  beneficiaryName?: string;
+  operationType: string;
+  contractNumber: string;
+  cedulaNumber?: string;
+  currentBalance: number;
+  annualInterestRate: number;
+  nextDueDate: string;
+  nextDueAmount: number;
+  term: DebtTerm;
+  guarantees: string;
+  isUnderMcrProrrogation: boolean;
+  confidence: number;
+  sourceText?: string;
+  farmId?: string;
+}
+
 export interface ChatMessage {
   id: string;
   sender: 'user' | 'assistant';
@@ -253,9 +291,13 @@ export interface ChatMessage {
   text: string;
   audioDurationSec?: number;
   intent?: 'query' | 'transaction' | 'simulation' | 'general';
+  attachment?: ChatAttachment;
   proposedTransaction?: ProposedTransaction;
+  proposedTransactions?: ProposedTransaction[];
+  proposedDebt?: ProposedDebtAction;
   actionConfirmed?: boolean;
   actionDismissed?: boolean;
+  modelUsed?: string;
 }
 
 export interface ImportPreviewRow {

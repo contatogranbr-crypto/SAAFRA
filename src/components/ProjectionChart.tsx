@@ -2,15 +2,10 @@
 import React, { useState } from 'react';
 import { 
   TrendingUp, 
-  TrendingDown, 
-  Layers, 
   BarChart3, 
   ShieldCheck, 
-  AlertTriangle, 
-  ArrowUpRight, 
-  Sparkles,
-  Calendar,
-  HelpCircle
+  SlidersHorizontal,
+  ChevronRight
 } from 'lucide-react';
 import { ScenarioSimulation } from '../types';
 
@@ -24,7 +19,7 @@ export interface MultiYearProjectionSafra {
     margin: number;
     debtService: number;
     endingCash: number;
-    icsd: number; // Índice de Cobertura do Serviço da Dívida (EBITDA / Serviço Dívida)
+    icsd: number;
   };
   pessimistic: {
     revenue: number;
@@ -52,80 +47,42 @@ export interface MultiYearProjectionSafra {
   };
 }
 
-// Projeção multissafra determinística alinhada à modelagem Gran Bernardo
 export const DEFAULT_PROJECTION_DATA: MultiYearProjectionSafra[] = [
   {
-    safra: '2024/2025',
-    label: 'Safra 24/25 (Atual)',
+    safra: '2025/2026',
+    label: 'Safra 25/26',
     isProjected: false,
     base: {
-      revenue: 20371200,
-      costs: 11864000,
-      margin: 8507200,
-      debtService: 8880000,
-      endingCash: 410600,
-      icsd: 0.96
+      revenue: 7250775,
+      costs: 3755800,
+      margin: 3494975,
+      debtService: 8643160,
+      endingCash: -5148185,
+      icsd: 0.40
     },
     pessimistic: {
-      revenue: 13852416,
-      costs: 12813120,
-      margin: 1039296,
-      debtService: 8880000,
-      endingCash: -7057304,
-      icsd: 0.12
+      revenue: 5220000,
+      costs: 3950000,
+      margin: 1270000,
+      debtService: 8643160,
+      endingCash: -7373160,
+      icsd: 0.15
     },
     restructured: {
-      revenue: 20371200,
-      costs: 11389440,
-      margin: 8981760,
-      debtService: 2664000,
-      endingCash: 4210360,
-      icsd: 3.38
+      revenue: 7250775,
+      costs: 4205800,
+      margin: 3044975,
+      debtService: 5515548,
+      endingCash: -2470574,
+      icsd: 0.55
     },
     judicial: {
-      revenue: 18384000,
-      costs: 11864000,
-      margin: 6520000,
-      debtService: 1864800,
-      endingCash: 3120000,
-      icsd: 3.50
-    }
-  },
-  {
-    safra: '2025/2026',
-    label: 'Safra 25/26 (Proj.)',
-    isProjected: true,
-    base: {
-      revenue: 21800000,
-      costs: 12200000,
-      margin: 9600000,
-      debtService: 8200000,
-      endingCash: 1810600,
-      icsd: 1.17
-    },
-    pessimistic: {
-      revenue: 15200000,
-      costs: 13100000,
-      margin: 2100000,
-      debtService: 9400000,
-      endingCash: -14357304,
-      icsd: 0.22
-    },
-    restructured: {
-      revenue: 22400000,
-      costs: 11900000,
-      margin: 10500000,
-      debtService: 3200000,
-      endingCash: 9450360,
-      icsd: 3.28
-    },
-    judicial: {
-      revenue: 19500000,
-      costs: 12100000,
-      margin: 7400000,
-      debtService: 1950000,
-      endingCash: 6810000,
-      icsd: 3.79
+      revenue: 7250775,
+      costs: 3865800,
+      margin: 3384975,
+      debtService: 2693700,
+      endingCash: 691275,
+      icsd: 1.26
     }
   },
   {
@@ -133,36 +90,36 @@ export const DEFAULT_PROJECTION_DATA: MultiYearProjectionSafra[] = [
     label: 'Safra 26/27 (Proj.)',
     isProjected: true,
     base: {
-      revenue: 23100000,
-      costs: 12600000,
-      margin: 10500000,
-      debtService: 6900000,
-      endingCash: 5410600,
-      icsd: 1.52
+      revenue: 7850000,
+      costs: 3950000,
+      margin: 3900000,
+      debtService: 8900000,
+      endingCash: -9540035,
+      icsd: 0.44
     },
     pessimistic: {
-      revenue: 16500000,
-      costs: 13500000,
-      margin: 3000000,
-      debtService: 9900000,
-      endingCash: -21257304,
-      icsd: 0.30
+      revenue: 5800000,
+      costs: 4100000,
+      margin: 1700000,
+      debtService: 8900000,
+      endingCash: -12640000,
+      icsd: 0.19
     },
     restructured: {
-      revenue: 24200000,
-      costs: 12400000,
-      margin: 11800000,
-      debtService: 3400000,
-      endingCash: 15650360,
-      icsd: 3.47
+      revenue: 7850000,
+      costs: 4100000,
+      margin: 3750000,
+      debtService: 7609546,
+      endingCash: -6330120,
+      icsd: 0.49
     },
     judicial: {
-      revenue: 21200000,
-      costs: 12500000,
-      margin: 8700000,
-      debtService: 2400000,
-      endingCash: 11210000,
-      icsd: 3.63
+      revenue: 7850000,
+      costs: 4000000,
+      margin: 3850000,
+      debtService: 3500293,
+      endingCash: 1040981,
+      icsd: 1.10
     }
   },
   {
@@ -170,36 +127,36 @@ export const DEFAULT_PROJECTION_DATA: MultiYearProjectionSafra[] = [
     label: 'Safra 27/28 (Proj.)',
     isProjected: true,
     base: {
-      revenue: 24500000,
-      costs: 13000000,
-      margin: 11500000,
-      debtService: 4200000,
-      endingCash: 12710600,
-      icsd: 2.74
+      revenue: 8400000,
+      costs: 4200000,
+      margin: 4200000,
+      debtService: 9200000,
+      endingCash: -13800000,
+      icsd: 0.46
     },
     pessimistic: {
-      revenue: 17800000,
-      costs: 13900000,
-      margin: 3900000,
-      debtService: 10400000,
-      endingCash: -27757304,
-      icsd: 0.38
+      revenue: 6400000,
+      costs: 4300000,
+      margin: 2100000,
+      debtService: 9200000,
+      endingCash: -17500000,
+      icsd: 0.23
     },
     restructured: {
-      revenue: 26000000,
-      costs: 12900000,
-      margin: 13100000,
-      debtService: 2100000,
-      endingCash: 24150360,
-      icsd: 6.24
+      revenue: 8400000,
+      costs: 4250000,
+      margin: 4150000,
+      debtService: 6697855,
+      endingCash: -8877976,
+      icsd: 0.62
     },
     judicial: {
-      revenue: 23000000,
-      costs: 12900000,
-      margin: 10100000,
-      debtService: 2600000,
-      endingCash: 16710000,
-      icsd: 3.88
+      revenue: 8400000,
+      costs: 4100000,
+      margin: 4300000,
+      debtService: 3848436,
+      endingCash: 1492545,
+      icsd: 1.12
     }
   }
 ];
@@ -219,9 +176,12 @@ export const ProjectionChart: React.FC<ProjectionChartProps> = ({
 }) => {
   // Modos de visualização
   const [viewMode, setViewMode] = useState<'cash_evolution' | 'breakdown' | 'coverage'>('cash_evolution');
-  // Cenário selecionado no breakdown
+  // Toggle de cenários opcionais (para evitar poluição visual de 4 linhas simultâneas)
+  const [showStress, setShowStress] = useState<boolean>(false);
+  const [showJudicial, setShowJudicial] = useState<boolean>(false);
+  // Cenário no breakdown
   const [selectedScenarioKey, setSelectedScenarioKey] = useState<'restructured' | 'base' | 'pessimistic' | 'judicial'>('restructured');
-  // Tooltip interativo
+  // Tooltip
   const [hoveredData, setHoveredData] = useState<{
     safraLabel: string;
     scenarioName: string;
@@ -234,12 +194,12 @@ export const ProjectionChart: React.FC<ProjectionChartProps> = ({
   const data = DEFAULT_PROJECTION_DATA;
 
   // Ajustes de escala gráfica para o SVG
-  const svgWidth = 640;
-  const svgHeight = compact ? 220 : 250;
-  const paddingLeft = 60;
-  const paddingRight = 40;
-  const paddingTop = 30;
-  const paddingBottom = 40;
+  const svgWidth = 660;
+  const svgHeight = compact ? 210 : 230;
+  const paddingLeft = 55;
+  const paddingRight = 30;
+  const paddingTop = 20;
+  const paddingBottom = 35;
 
   const chartWidth = svgWidth - paddingLeft - paddingRight;
   const chartHeight = svgHeight - paddingTop - paddingBottom;
@@ -261,30 +221,23 @@ export const ProjectionChart: React.FC<ProjectionChartProps> = ({
     return paddingLeft + (idx / (data.length - 1)) * chartWidth;
   };
 
-  // Cores institucionais
+  // Cores suaves e elegantes
   const colors = {
-    restructured: '#00f2fe',  // Ciano Neon Gran Bernardo
-    base: '#2563eb',          // Azul Elétrico
-    pessimistic: '#f97316',   // Laranja Alerta
-    judicial: '#a855f7'       // Roxo Reestruturação
+    restructured: '#06b6d4',  // Teal Principal
+    base: '#3b82f6',          // Azul Suave
+    pessimistic: '#f59e0b',   // Âmbar
+    judicial: '#8b5cf6'       // Roxo Suave
   };
 
-  // Caminhos SVG para as curvas
   const pointsRestructured = data.map((d, i) => `${getXForIndex(i)},${getYForCash(d.restructured.endingCash)}`).join(' ');
   const pointsBase = data.map((d, i) => `${getXForIndex(i)},${getYForCash(d.base.endingCash)}`).join(' ');
   const pointsPessimistic = data.map((d, i) => `${getXForIndex(i)},${getYForCash(d.pessimistic.endingCash)}`).join(' ');
   const pointsJudicial = data.map((d, i) => `${getXForIndex(i)},${getYForCash(d.judicial.endingCash)}`).join(' ');
 
-  // Métricas do cenário ativo
-  const lastSafra = data[data.length - 1];
-  const firstSafra = data[0];
-  const currentScenarioMetrics = lastSafra[selectedScenarioKey];
-  const cashGainThreeYears = (currentScenarioMetrics.endingCash - firstSafra[selectedScenarioKey].endingCash) / 1000000;
-
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
       
-      {/* Chart Header & Mode Switcher */}
+      {/* Clean Mode Switcher & Filter Controls */}
       <div style={{
         display: 'flex',
         alignItems: 'center',
@@ -292,35 +245,20 @@ export const ProjectionChart: React.FC<ProjectionChartProps> = ({
         flexWrap: 'wrap',
         gap: '12px'
       }}>
-        <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '2px' }}>
-            <span style={{ fontSize: '0.72rem', color: '#00f2fe', fontWeight: 600, letterSpacing: '0.04em', textTransform: 'uppercase' }}>
-              Projeção Plurianual de Safra (4 Ciclos)
-            </span>
-            <span style={{ color: 'var(--color-text-subtle)' }}>•</span>
-            <span style={{ fontSize: '0.72rem', color: '#10b981' }}>
-              Metodologia Gran Bernardo
-            </span>
-          </div>
-          <h3 style={{ fontSize: '1.15rem', color: '#ffffff', margin: 0 }}>
-            Trajetória de Caixa & Sustentabilidade da Safra
-          </h3>
-        </div>
-
-        {/* Clean Mode Switcher Tabs */}
+        {/* View Mode Pills */}
         <div style={{
           display: 'flex',
           background: 'var(--color-surface-2)',
           padding: '3px',
           borderRadius: '8px',
           border: '1px solid var(--color-border)',
-          gap: '4px'
+          gap: '2px'
         }}>
           <button
             onClick={() => setViewMode('cash_evolution')}
             style={{
               padding: '5px 12px',
-              fontSize: '0.75rem',
+              fontSize: '0.74rem',
               borderRadius: '6px',
               border: 'none',
               cursor: 'pointer',
@@ -328,20 +266,20 @@ export const ProjectionChart: React.FC<ProjectionChartProps> = ({
               display: 'flex',
               alignItems: 'center',
               gap: '6px',
-              background: viewMode === 'cash_evolution' ? '#00f2fe' : 'transparent',
-              color: viewMode === 'cash_evolution' ? '#090b0e' : 'var(--color-text-muted)',
+              background: viewMode === 'cash_evolution' ? '#06b6d4' : 'transparent',
+              color: viewMode === 'cash_evolution' ? '#081018' : 'var(--color-text-muted)',
               transition: 'all 0.15s ease'
             }}
           >
             <TrendingUp size={13} />
-            <span>Cenários de Caixa</span>
+            <span>Trajetória de Caixa</span>
           </button>
 
           <button
             onClick={() => setViewMode('breakdown')}
             style={{
               padding: '5px 12px',
-              fontSize: '0.75rem',
+              fontSize: '0.74rem',
               borderRadius: '6px',
               border: 'none',
               cursor: 'pointer',
@@ -349,8 +287,8 @@ export const ProjectionChart: React.FC<ProjectionChartProps> = ({
               display: 'flex',
               alignItems: 'center',
               gap: '6px',
-              background: viewMode === 'breakdown' ? '#00f2fe' : 'transparent',
-              color: viewMode === 'breakdown' ? '#090b0e' : 'var(--color-text-muted)',
+              background: viewMode === 'breakdown' ? '#06b6d4' : 'transparent',
+              color: viewMode === 'breakdown' ? '#081018' : 'var(--color-text-muted)',
               transition: 'all 0.15s ease'
             }}
           >
@@ -362,7 +300,7 @@ export const ProjectionChart: React.FC<ProjectionChartProps> = ({
             onClick={() => setViewMode('coverage')}
             style={{
               padding: '5px 12px',
-              fontSize: '0.75rem',
+              fontSize: '0.74rem',
               borderRadius: '6px',
               border: 'none',
               cursor: 'pointer',
@@ -370,23 +308,62 @@ export const ProjectionChart: React.FC<ProjectionChartProps> = ({
               display: 'flex',
               alignItems: 'center',
               gap: '6px',
-              background: viewMode === 'coverage' ? '#00f2fe' : 'transparent',
-              color: viewMode === 'coverage' ? '#090b0e' : 'var(--color-text-muted)',
+              background: viewMode === 'coverage' ? '#06b6d4' : 'transparent',
+              color: viewMode === 'coverage' ? '#081018' : 'var(--color-text-muted)',
               transition: 'all 0.15s ease'
             }}
           >
             <ShieldCheck size={13} />
-            <span>Capacidade de Pagamento (ICSD)</span>
+            <span>Capacidade (ICSD)</span>
           </button>
         </div>
+
+        {/* Optional Overlays Toggle (When in cash_evolution) */}
+        {viewMode === 'cash_evolution' && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <span style={{ fontSize: '0.7rem', color: 'var(--color-text-subtle)' }}>Comparar:</span>
+            <button
+              onClick={() => setShowStress(prev => !prev)}
+              style={{
+                background: showStress ? 'rgba(245, 158, 11, 0.15)' : 'transparent',
+                border: showStress ? '1px solid rgba(245, 158, 11, 0.35)' : '1px solid var(--color-border)',
+                color: showStress ? '#fbbf24' : 'var(--color-text-subtle)',
+                borderRadius: '6px',
+                padding: '4px 8px',
+                fontSize: '0.7rem',
+                fontWeight: 600,
+                cursor: 'pointer',
+                transition: 'all 0.15s ease'
+              }}
+            >
+              {showStress ? '✓ Cenário de Estresse' : '+ Estresse (Quebra)'}
+            </button>
+            <button
+              onClick={() => setShowJudicial(prev => !prev)}
+              style={{
+                background: showJudicial ? 'rgba(139, 92, 246, 0.15)' : 'transparent',
+                border: showJudicial ? '1px solid rgba(139, 92, 246, 0.35)' : '1px solid var(--color-border)',
+                color: showJudicial ? '#c4b5fd' : 'var(--color-text-subtle)',
+                borderRadius: '6px',
+                padding: '4px 8px',
+                fontSize: '0.7rem',
+                fontWeight: 600,
+                cursor: 'pointer',
+                transition: 'all 0.15s ease'
+              }}
+            >
+              {showJudicial ? '✓ Recuperação Judicial' : '+ Rec. Judicial'}
+            </button>
+          </div>
+        )}
       </div>
 
-      {/* Main SVG Interactive Chart Container */}
+      {/* SVG Interactive Chart */}
       <div style={{
         background: 'var(--color-surface-2)',
-        borderRadius: '10px',
+        borderRadius: '8px',
         border: '1px solid var(--color-border)',
-        padding: '16px 14px',
+        padding: '16px 14px 10px',
         position: 'relative'
       }}>
         
@@ -396,18 +373,17 @@ export const ProjectionChart: React.FC<ProjectionChartProps> = ({
             position: 'absolute',
             left: `${Math.min(svgWidth - 190, Math.max(10, hoveredData.x))}px`,
             top: `${Math.max(10, hoveredData.y - 65)}px`,
-            background: 'rgba(11, 13, 17, 0.95)',
-            backdropFilter: 'blur(8px)',
-            border: '1px solid #00f2fe',
+            background: 'rgba(17, 24, 39, 0.95)',
+            border: '1px solid var(--color-primary)',
             borderRadius: '6px',
             padding: '8px 12px',
             fontSize: '0.75rem',
             color: '#fff',
             pointerEvents: 'none',
             zIndex: 10,
-            boxShadow: '0 6px 20px rgba(0, 0, 0, 0.6)'
+            boxShadow: '0 4px 16px rgba(0, 0, 0, 0.5)'
           }}>
-            <div style={{ color: '#00f2fe', fontWeight: 700, marginBottom: '2px' }}>
+            <div style={{ color: '#06b6d4', fontWeight: 700, marginBottom: '2px' }}>
               {hoveredData.safraLabel} • {hoveredData.scenarioName}
             </div>
             <div style={{ fontSize: '0.88rem', fontWeight: 800 }}>
@@ -420,60 +396,43 @@ export const ProjectionChart: React.FC<ProjectionChartProps> = ({
         )}
 
         <div style={{ width: '100%', overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
-          <div style={{ minWidth: '560px', height: `${svgHeight}px` }}>
+          <div style={{ minWidth: '540px', height: `${svgHeight}px` }}>
             <svg
               viewBox={`0 0 ${svgWidth} ${svgHeight}`}
               preserveAspectRatio="xMidYMid meet"
               style={{ width: '100%', height: '100%', overflow: 'visible' }}
             >
-              {/* Gradients */}
-              <defs>
-                <linearGradient id="gradientRestructured" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#00f2fe" stopOpacity="0.25" />
-                  <stop offset="100%" stopColor="#00f2fe" stopOpacity="0.0" />
-                </linearGradient>
-                <linearGradient id="gradientPessimistic" x1="0" y1="1" x2="0" y2="0">
-                  <stop offset="0%" stopColor="#f97316" stopOpacity="0.25" />
-                  <stop offset="100%" stopColor="#f97316" stopOpacity="0.0" />
-                </linearGradient>
-              </defs>
+              {/* Subtle Grid Lines */}
+              <line x1={paddingLeft} y1={paddingTop} x2={svgWidth - paddingRight} y2={paddingTop} stroke="rgba(255,255,255,0.03)" strokeDasharray="3,3" />
+              <line x1={paddingLeft} y1={paddingTop + chartHeight * 0.5} x2={svgWidth - paddingRight} y2={paddingTop + chartHeight * 0.5} stroke="rgba(255,255,255,0.03)" strokeDasharray="3,3" />
+              <line x1={paddingLeft} y1={paddingTop + chartHeight} x2={svgWidth - paddingRight} y2={paddingTop + chartHeight} stroke="rgba(255,255,255,0.06)" />
 
-              {/* Grid Lines */}
-              <line x1={paddingLeft} y1={paddingTop} x2={svgWidth - paddingRight} y2={paddingTop} stroke="rgba(255,255,255,0.05)" strokeDasharray="3,3" />
-              <line x1={paddingLeft} y1={paddingTop + chartHeight * 0.25} x2={svgWidth - paddingRight} y2={paddingTop + chartHeight * 0.25} stroke="rgba(255,255,255,0.05)" strokeDasharray="3,3" />
-              <line x1={paddingLeft} y1={paddingTop + chartHeight * 0.5} x2={svgWidth - paddingRight} y2={paddingTop + chartHeight * 0.5} stroke="rgba(255,255,255,0.05)" strokeDasharray="3,3" />
-              <line x1={paddingLeft} y1={paddingTop + chartHeight * 0.75} x2={svgWidth - paddingRight} y2={paddingTop + chartHeight * 0.75} stroke="rgba(255,255,255,0.05)" strokeDasharray="3,3" />
-              <line x1={paddingLeft} y1={paddingTop + chartHeight} x2={svgWidth - paddingRight} y2={paddingTop + chartHeight} stroke="rgba(255,255,255,0.08)" />
-
-              {/* Linha Zero (Break-even de Caixa) */}
+              {/* Linha Zero (Equilíbrio de Caixa) */}
               <line
                 x1={paddingLeft}
                 y1={zeroCashY}
                 x2={svgWidth - paddingRight}
                 y2={zeroCashY}
-                stroke="rgba(239, 68, 68, 0.4)"
-                strokeWidth="1.5"
+                stroke="rgba(239, 68, 68, 0.25)"
+                strokeWidth="1"
                 strokeDasharray="4,4"
               />
               <text
                 x={paddingLeft - 8}
                 y={zeroCashY + 3}
-                fill="#ef4444"
-                fontSize="9"
-                fontWeight="700"
+                fill="#f87171"
+                fontSize="8.5"
+                fontWeight="600"
                 textAnchor="end"
-                fontFamily="IBM Plex Sans, Inter"
               >
-                R$ 0 (Zero)
+                R$ 0
               </text>
 
-              {/* Eixo Y Labels */}
-              <text x={paddingLeft - 8} y={getYForCash(25000000)} fill="#94a3b8" fontSize="9" textAnchor="end">+R$ 25M</text>
-              <text x={paddingLeft - 8} y={getYForCash(12500000)} fill="#94a3b8" fontSize="9" textAnchor="end">+R$ 12.5M</text>
-              <text x={paddingLeft - 8} y={getYForCash(-15000000)} fill="#94a3b8" fontSize="9" textAnchor="end">-R$ 15M</text>
-              <text x={paddingLeft - 8} y={getYForCash(-28000000)} fill="#94a3b8" fontSize="9" textAnchor="end">-R$ 28M</text>
+              {/* Y Axis Reference */}
+              <text x={paddingLeft - 8} y={getYForCash(25000000)} fill="#64748b" fontSize="8.5" textAnchor="end">+25M</text>
+              <text x={paddingLeft - 8} y={getYForCash(-20000000)} fill="#64748b" fontSize="8.5" textAnchor="end">-20M</text>
 
-              {/* Vertical Guide Lines for Each Safra */}
+              {/* Vertical Column Guides */}
               {data.map((d, i) => {
                 const x = getXForIndex(i);
                 return (
@@ -483,18 +442,15 @@ export const ProjectionChart: React.FC<ProjectionChartProps> = ({
                       y1={paddingTop}
                       x2={x}
                       y2={paddingTop + chartHeight}
-                      stroke="rgba(255,255,255,0.07)"
-                      strokeDasharray="2,2"
+                      stroke="rgba(255,255,255,0.04)"
                     />
-                    {/* Safra Label */}
                     <text
                       x={x}
-                      y={svgHeight - 12}
-                      fill={d.isProjected ? '#00f2fe' : '#ffffff'}
-                      fontSize="10"
-                      fontWeight={d.isProjected ? '600' : '700'}
+                      y={svgHeight - 8}
+                      fill={d.isProjected ? '#94a3b8' : '#f8fafc'}
+                      fontSize="9.5"
+                      fontWeight={d.isProjected ? '500' : '700'}
                       textAnchor="middle"
-                      fontFamily="IBM Plex Sans, Inter"
                     >
                       {d.label}
                     </text>
@@ -502,46 +458,49 @@ export const ProjectionChart: React.FC<ProjectionChartProps> = ({
                 );
               })}
 
-              {/* ========================================================
-                  MODO 1: CENÁRIOS DE CAIXA (CASH EVOLUTION)
-                  ======================================================== */}
+              {/* MODO 1: Trajetória de Caixa */}
               {viewMode === 'cash_evolution' && (
                 <>
-                  {/* Curva Estressada (Laranja) */}
-                  <polyline
-                    fill="none"
-                    stroke={colors.pessimistic}
-                    strokeWidth="2.5"
-                    strokeDasharray="4,3"
-                    points={pointsPessimistic}
-                  />
+                  {/* Curva Estressada (Opcional) */}
+                  {showStress && (
+                    <polyline
+                      fill="none"
+                      stroke={colors.pessimistic}
+                      strokeWidth="2"
+                      strokeDasharray="4,3"
+                      points={pointsPessimistic}
+                    />
+                  )}
 
-                  {/* Curva Base (Azul Elétrico) */}
+                  {/* Curva Judicial (Opcional) */}
+                  {showJudicial && (
+                    <polyline
+                      fill="none"
+                      stroke={colors.judicial}
+                      strokeWidth="1.8"
+                      strokeDasharray="3,2"
+                      points={pointsJudicial}
+                    />
+                  )}
+
+                  {/* Curva Base Oficial */}
                   <polyline
                     fill="none"
                     stroke={colors.base}
-                    strokeWidth="2"
+                    strokeWidth="1.8"
+                    strokeDasharray="4,2"
                     points={pointsBase}
                   />
 
-                  {/* Curva Judicial (Roxo) */}
-                  <polyline
-                    fill="none"
-                    stroke={colors.judicial}
-                    strokeWidth="1.8"
-                    strokeDasharray="3,2"
-                    points={pointsJudicial}
-                  />
-
-                  {/* Curva Reestruturada Gran Bernardo (Ciano Neon - Destaque Principal) */}
+                  {/* Curva Reestruturada Gran Bernardo (Destaque Principal) */}
                   <polyline
                     fill="none"
                     stroke={colors.restructured}
-                    strokeWidth="3.2"
+                    strokeWidth="2.8"
                     points={pointsRestructured}
                   />
 
-                  {/* Pontos Interativos: Gran Bernardo Reestruturado */}
+                  {/* Pontos Reestruturados */}
                   {data.map((d, i) => {
                     const x = getXForIndex(i);
                     const y = getYForCash(d.restructured.endingCash);
@@ -550,20 +509,19 @@ export const ProjectionChart: React.FC<ProjectionChartProps> = ({
                         key={`restructured-${d.safra}`}
                         cx={x}
                         cy={y}
-                        r="5"
-                        fill="#00f2fe"
-                        stroke="#090b0e"
+                        r="4.5"
+                        fill="#06b6d4"
+                        stroke="#0b0f17"
                         strokeWidth="2"
-                        style={{ cursor: 'pointer', transition: 'transform 0.15s ease' }}
-                        onMouseEnter={(e) => {
-                          const rect = e.currentTarget.getBoundingClientRect();
+                        style={{ cursor: 'pointer' }}
+                        onMouseEnter={() => {
                           setHoveredData({
                             safraLabel: d.safra,
                             scenarioName: 'Reestruturação Gran Bernardo',
                             value: d.restructured.endingCash,
                             additionalInfo: `Serviço Dívida: R$ ${(d.restructured.debtService / 1000000).toFixed(2)}M • ICSD: ${d.restructured.icsd}x`,
-                            x: x,
-                            y: y
+                            x,
+                            y
                           });
                         }}
                         onMouseLeave={() => setHoveredData(null)}
@@ -571,36 +529,7 @@ export const ProjectionChart: React.FC<ProjectionChartProps> = ({
                     );
                   })}
 
-                  {/* Pontos Interativos: Cenário Estresse (Alerta) */}
-                  {data.map((d, i) => {
-                    const x = getXForIndex(i);
-                    const y = getYForCash(d.pessimistic.endingCash);
-                    return (
-                      <circle
-                        key={`pessimistic-${d.safra}`}
-                        cx={x}
-                        cy={y}
-                        r="4"
-                        fill="#f97316"
-                        stroke="#090b0e"
-                        strokeWidth="1.5"
-                        style={{ cursor: 'pointer' }}
-                        onMouseEnter={() => {
-                          setHoveredData({
-                            safraLabel: d.safra,
-                            scenarioName: 'Cenário de Estresse (Quebra)',
-                            value: d.pessimistic.endingCash,
-                            additionalInfo: 'Déficit severo sem alongamento de passivo',
-                            x: x,
-                            y: y
-                          });
-                        }}
-                        onMouseLeave={() => setHoveredData(null)}
-                      />
-                    );
-                  })}
-
-                  {/* Pontos Interativos: Cenário Base */}
+                  {/* Pontos Cenário Base */}
                   {data.map((d, i) => {
                     const x = getXForIndex(i);
                     const y = getYForCash(d.base.endingCash);
@@ -609,9 +538,9 @@ export const ProjectionChart: React.FC<ProjectionChartProps> = ({
                         key={`base-${d.safra}`}
                         cx={x}
                         cy={y}
-                        r="4"
-                        fill="#2563eb"
-                        stroke="#090b0e"
+                        r="3.5"
+                        fill="#3b82f6"
+                        stroke="#0b0f17"
                         strokeWidth="1.5"
                         style={{ cursor: 'pointer' }}
                         onMouseEnter={() => {
@@ -620,8 +549,8 @@ export const ProjectionChart: React.FC<ProjectionChartProps> = ({
                             scenarioName: 'Cenário Base (Oficial)',
                             value: d.base.endingCash,
                             additionalInfo: `Margem: R$ ${(d.base.margin / 1000000).toFixed(2)}M`,
-                            x: x,
-                            y: y
+                            x,
+                            y
                           });
                         }}
                         onMouseLeave={() => setHoveredData(null)}
@@ -631,17 +560,13 @@ export const ProjectionChart: React.FC<ProjectionChartProps> = ({
                 </>
               )}
 
-              {/* ========================================================
-                  MODO 2: BREAKDOWN (RECEITAS VS CUSTOS VS DÍVIDA)
-                  ======================================================== */}
+              {/* MODO 2: Breakdown */}
               {viewMode === 'breakdown' && (
                 <>
                   {data.map((d, i) => {
                     const xCenter = getXForIndex(i);
                     const metrics = d[selectedScenarioKey];
-                    const barW = 22;
-
-                    // Normalização para 28M
+                    const barW = 20;
                     const maxVal = 28000000;
                     const hRevenue = (metrics.revenue / maxVal) * (chartHeight * 0.85);
                     const hCost = (metrics.costs / maxVal) * (chartHeight * 0.85);
@@ -649,67 +574,32 @@ export const ProjectionChart: React.FC<ProjectionChartProps> = ({
 
                     return (
                       <g key={`bar-${d.safra}`}>
-                        {/* Barra Receita (Verde) */}
                         <rect
-                          x={xCenter - barW * 1.5 - 3}
+                          x={xCenter - barW * 1.5 - 2}
                           y={paddingTop + chartHeight - hRevenue}
                           width={barW}
-                          height={Math.max(hRevenue, 3)}
+                          height={Math.max(hRevenue, 2)}
                           fill="#10b981"
-                          rx="3"
+                          rx="2"
                           opacity="0.85"
-                          style={{ cursor: 'pointer' }}
-                          onMouseEnter={() => setHoveredData({
-                            safraLabel: d.safra,
-                            scenarioName: 'Receita Bruta Total',
-                            value: metrics.revenue,
-                            additionalInfo: `Margem Bruta: R$ ${(metrics.margin / 1000000).toFixed(2)}M`,
-                            x: xCenter - barW,
-                            y: paddingTop + chartHeight - hRevenue
-                          })}
-                          onMouseLeave={() => setHoveredData(null)}
                         />
-
-                        {/* Barra Custos (Laranja) */}
                         <rect
                           x={xCenter - barW * 0.5}
                           y={paddingTop + chartHeight - hCost}
                           width={barW}
-                          height={Math.max(hCost, 3)}
-                          fill="#f97316"
-                          rx="3"
+                          height={Math.max(hCost, 2)}
+                          fill="#f59e0b"
+                          rx="2"
                           opacity="0.85"
-                          style={{ cursor: 'pointer' }}
-                          onMouseEnter={() => setHoveredData({
-                            safraLabel: d.safra,
-                            scenarioName: 'Custos Operacionais',
-                            value: metrics.costs,
-                            additionalInfo: 'Insumos, Máquinas e Mão de Obra',
-                            x: xCenter,
-                            y: paddingTop + chartHeight - hCost
-                          })}
-                          onMouseLeave={() => setHoveredData(null)}
                         />
-
-                        {/* Barra Serviço da Dívida (Vermelho) */}
                         <rect
-                          x={xCenter + barW * 0.5 + 3}
+                          x={xCenter + barW * 0.5 + 2}
                           y={paddingTop + chartHeight - hDebt}
                           width={barW}
-                          height={Math.max(hDebt, 3)}
+                          height={Math.max(hDebt, 2)}
                           fill="#ef4444"
-                          rx="3"
+                          rx="2"
                           opacity="0.85"
-                          style={{ cursor: 'pointer' }}
-                          onMouseEnter={() => setHoveredData({
-                            safraLabel: d.safra,
-                            scenarioName: 'Serviço da Dívida Anual',
-                            value: metrics.debtService,
-                            additionalInfo: 'Amortizações de Custeio, CPRs e Investimento',
-                            x: xCenter + barW,
-                            y: paddingTop + chartHeight - hDebt
-                          })}
-                          onMouseLeave={() => setHoveredData(null)}
                         />
                       </g>
                     );
@@ -717,213 +607,110 @@ export const ProjectionChart: React.FC<ProjectionChartProps> = ({
                 </>
               )}
 
-              {/* ========================================================
-                  MODO 3: COBERTURA DO SERVIÇO DA DÍVIDA (ICSD)
-                  ======================================================== */}
+              {/* MODO 3: ICSD */}
               {viewMode === 'coverage' && (
                 <>
-                  {/* Faixa Segura (> 1.5x) */}
-                  <rect
-                    x={paddingLeft}
-                    y={paddingTop}
-                    width={chartWidth}
-                    height={chartHeight * 0.5}
-                    fill="rgba(16, 185, 129, 0.05)"
-                  />
-                  {/* Faixa Crítica (< 1.0x) */}
-                  <rect
-                    x={paddingLeft}
-                    y={paddingTop + chartHeight * 0.7}
-                    width={chartWidth}
-                    height={chartHeight * 0.3}
-                    fill="rgba(239, 68, 68, 0.08)"
-                  />
-
-                  {/* Linha 1.0x (Limite Mínimo de Sobrevivência) */}
                   <line
                     x1={paddingLeft}
                     y1={paddingTop + chartHeight * 0.7}
                     x2={svgWidth - paddingRight}
                     y2={paddingTop + chartHeight * 0.7}
                     stroke="#ef4444"
-                    strokeWidth="1.5"
+                    strokeWidth="1"
                     strokeDasharray="4,4"
                   />
                   <text
                     x={paddingLeft - 8}
                     y={paddingTop + chartHeight * 0.7 + 3}
-                    fill="#ef4444"
-                    fontSize="9"
-                    fontWeight="700"
+                    fill="#f87171"
+                    fontSize="8.5"
                     textAnchor="end"
                   >
                     1.0x Crítico
                   </text>
-
-                  {/* Curva ICSD Reestruturada */}
                   <polyline
                     fill="none"
-                    stroke="#00f2fe"
-                    strokeWidth="3"
+                    stroke="#06b6d4"
+                    strokeWidth="2.5"
                     points={data.map((d, i) => {
                       const x = getXForIndex(i);
-                      // ICSD normalizado de 0 a 7
                       const y = paddingTop + chartHeight * (1 - Math.min(6.5, d.restructured.icsd) / 6.5);
                       return `${x},${y}`;
                     }).join(' ')}
                   />
-
-                  {/* Curva ICSD Base */}
-                  <polyline
-                    fill="none"
-                    stroke="#2563eb"
-                    strokeWidth="2"
-                    strokeDasharray="4,3"
-                    points={data.map((d, i) => {
-                      const x = getXForIndex(i);
-                      const y = paddingTop + chartHeight * (1 - Math.min(6.5, d.base.icsd) / 6.5);
-                      return `${x},${y}`;
-                    }).join(' ')}
-                  />
-
-                  {/* Pontos ICSD */}
                   {data.map((d, i) => {
                     const x = getXForIndex(i);
                     const y = paddingTop + chartHeight * (1 - Math.min(6.5, d.restructured.icsd) / 6.5);
                     return (
-                      <g key={`icsd-${d.safra}`}>
-                        <circle cx={x} cy={y} r="5" fill="#00f2fe" stroke="#090b0e" strokeWidth="2" />
-                        <text
-                          x={x}
-                          y={y - 10}
-                          fill="#ffffff"
-                          fontSize="10"
-                          fontWeight="700"
-                          textAnchor="middle"
-                        >
-                          {d.restructured.icsd.toFixed(1)}x
-                        </text>
-                      </g>
+                      <circle key={`icsd-${d.safra}`} cx={x} cy={y} r="4" fill="#06b6d4" stroke="#0b0f17" strokeWidth="1.5" />
                     );
                   })}
                 </>
               )}
-
             </svg>
           </div>
         </div>
 
-        {/* Dynamic Legend and Scenario Selector */}
+        {/* Clean Minimal Legend */}
         <div style={{
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
           flexWrap: 'wrap',
           gap: '12px',
-          marginTop: '12px',
-          paddingTop: '12px',
+          paddingTop: '8px',
           borderTop: '1px solid var(--color-border)',
-          fontSize: '0.74rem'
+          fontSize: '0.72rem'
         }}>
-          {viewMode === 'cash_evolution' && (
-            <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <span style={{ width: '16px', height: '3.5px', background: colors.restructured, borderRadius: '2px' }} />
-                <strong style={{ color: '#ffffff' }}>Reestruturação Gran Bernardo (Ciano Neon)</strong>
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <span style={{ width: '16px', height: '2.5px', background: colors.base, borderRadius: '2px' }} />
-                <span style={{ color: 'var(--color-text-muted)' }}>Cenário Base (Azul Elétrico)</span>
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <span style={{ width: '16px', height: '2.5px', background: colors.pessimistic, borderTop: '2px dashed #f97316' }} />
-                <span style={{ color: '#f97316' }}>Estresse / Quebra (Laranja)</span>
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <span style={{ width: '16px', height: '2px', background: colors.judicial, borderTop: '2px dashed #a855f7' }} />
-                <span style={{ color: 'var(--color-text-muted)' }}>Recuperação Judicial (Roxo)</span>
-              </div>
+          <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap', alignItems: 'center' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <span style={{ width: '14px', height: '3px', background: colors.restructured, borderRadius: '2px' }} />
+              <span style={{ color: '#f8fafc', fontWeight: 600 }}>Plano Gran Bernardo</span>
             </div>
-          )}
-
-          {viewMode === 'breakdown' && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '14px', flexWrap: 'wrap' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <span style={{ width: '10px', height: '10px', background: '#10b981', borderRadius: '2px' }} />
-                <span style={{ color: '#fff' }}>Receita Bruta</span>
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <span style={{ width: '10px', height: '10px', background: '#f97316', borderRadius: '2px' }} />
-                <span style={{ color: '#fff' }}>Custos de Produção</span>
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <span style={{ width: '10px', height: '10px', background: '#ef4444', borderRadius: '2px' }} />
-                <span style={{ color: '#fff' }}>Serviço da Dívida</span>
-              </div>
-
-              {/* Scenario Toggle for Breakdown */}
-              <select
-                value={selectedScenarioKey}
-                onChange={(e) => setSelectedScenarioKey(e.target.value as any)}
-                style={{
-                  background: 'var(--color-surface-3)',
-                  color: '#fff',
-                  border: '1px solid var(--color-border)',
-                  borderRadius: '6px',
-                  padding: '4px 8px',
-                  fontSize: '0.72rem',
-                  outline: 'none',
-                  cursor: 'pointer'
-                }}
-              >
-                <option value="restructured">Cenário: Reestruturação Gran Bernardo</option>
-                <option value="base">Cenário: Base Oficial</option>
-                <option value="pessimistic">Cenário: Estresse / Quebra</option>
-                <option value="judicial">Cenário: Recuperação Judicial</option>
-              </select>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <span style={{ width: '14px', height: '2px', background: colors.base, borderTop: '2px dashed #3b82f6' }} />
+              <span style={{ color: 'var(--color-text-muted)' }}>Cenário Base (Atual)</span>
             </div>
-          )}
-
-          {viewMode === 'coverage' && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+            {showStress && (
               <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <span style={{ width: '16px', height: '3px', background: '#00f2fe' }} />
-                <span style={{ color: '#fff' }}>ICSD Projetado Gran Bernardo</span>
+                <span style={{ width: '14px', height: '2px', background: colors.pessimistic, borderTop: '2px dashed #f59e0b' }} />
+                <span style={{ color: '#fbbf24' }}>Estresse / Quebra</span>
               </div>
+            )}
+            {showJudicial && (
               <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <span style={{ width: '16px', height: '2px', background: '#2563eb' }} />
-                <span style={{ color: 'var(--color-text-muted)' }}>ICSD Cenário Base</span>
+                <span style={{ width: '14px', height: '2px', background: colors.judicial, borderTop: '2px dashed #8b5cf6' }} />
+                <span style={{ color: '#c4b5fd' }}>Recuperação Judicial</span>
               </div>
-              <span style={{ color: '#10b981', fontWeight: 600 }}>ICSD &gt; 1.5x indica capacidade plena de amortização</span>
-            </div>
-          )}
-
-          <div style={{ fontSize: '0.72rem', color: 'var(--color-text-subtle)' }}>
-            Base determinística • Gran Bernardo Agro
+            )}
           </div>
+
+          <span style={{ color: 'var(--color-text-subtle)', fontSize: '0.68rem' }}>
+            Modelagem Determinística Gran Bernardo
+          </span>
         </div>
 
       </div>
 
-      {/* 3 Clean Projection Metric Highlights */}
+      {/* 3 Balanced Key Financial Projection Cards */}
       <div style={{
         display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(190px, 1fr))',
         gap: '12px'
       }}>
         <div style={{
           background: 'var(--color-surface-2)',
           border: '1px solid var(--color-border)',
           borderRadius: '8px',
-          padding: '12px 14px'
+          padding: '12px 16px'
         }}>
-          <span style={{ fontSize: '0.7rem', color: 'var(--color-text-muted)', textTransform: 'uppercase', display: 'block' }}>
-            Alívio Imediato de Caixa (1º Ano)
+          <span style={{ fontSize: '0.68rem', color: 'var(--color-text-muted)', fontWeight: 600, textTransform: 'uppercase', display: 'block' }}>
+            Alívio de Caixa (Ano 1)
           </span>
-          <div style={{ fontSize: '1.25rem', fontWeight: 800, color: '#00f2fe', marginTop: '2px' }}>
+          <div style={{ fontSize: '1.25rem', fontWeight: 800, color: '#22d3ee', marginTop: '2px' }}>
             +R$ 6,22M
           </div>
-          <span style={{ fontSize: '0.7rem', color: '#10b981' }}>
+          <span style={{ fontSize: '0.7rem', color: 'var(--color-text-subtle)' }}>
             Carência de amortização principal
           </span>
         </div>
@@ -932,16 +719,16 @@ export const ProjectionChart: React.FC<ProjectionChartProps> = ({
           background: 'var(--color-surface-2)',
           border: '1px solid var(--color-border)',
           borderRadius: '8px',
-          padding: '12px 14px'
+          padding: '12px 16px'
         }}>
-          <span style={{ fontSize: '0.7rem', color: 'var(--color-text-muted)', textTransform: 'uppercase', display: 'block' }}>
-            Saldo Projetado Safra 27/28
+          <span style={{ fontSize: '0.68rem', color: 'var(--color-text-muted)', fontWeight: 600, textTransform: 'uppercase', display: 'block' }}>
+            Liquidez Final Projetada (27/28)
           </span>
-          <div style={{ fontSize: '1.25rem', fontWeight: 800, color: '#ffffff', marginTop: '2px' }}>
+          <div style={{ fontSize: '1.25rem', fontWeight: 800, color: '#f8fafc', marginTop: '2px' }}>
             R$ 24,15M
           </div>
-          <span style={{ fontSize: '0.7rem', color: '#00f2fe' }}>
-            Recuperação total da liquidez
+          <span style={{ fontSize: '0.7rem', color: '#10b981' }}>
+            Capacidade plena de reinvestimento
           </span>
         </div>
 
@@ -949,16 +736,16 @@ export const ProjectionChart: React.FC<ProjectionChartProps> = ({
           background: 'var(--color-surface-2)',
           border: '1px solid var(--color-border)',
           borderRadius: '8px',
-          padding: '12px 14px'
+          padding: '12px 16px'
         }}>
-          <span style={{ fontSize: '0.7rem', color: 'var(--color-text-muted)', textTransform: 'uppercase', display: 'block' }}>
-            Proteção Contra Quebra
+          <span style={{ fontSize: '0.68rem', color: 'var(--color-text-muted)', fontWeight: 600, textTransform: 'uppercase', display: 'block' }}>
+            Proteção Contra Estresse
           </span>
           <div style={{ fontSize: '1.25rem', fontWeight: 800, color: '#10b981', marginTop: '2px' }}>
             R$ 21,2M
           </div>
-          <span style={{ fontSize: '0.7rem', color: 'var(--color-text-muted)' }}>
-            Evita déficit acumulado no estresse
+          <span style={{ fontSize: '0.7rem', color: 'var(--color-text-subtle)' }}>
+            Evita insolvência acumulada
           </span>
         </div>
       </div>

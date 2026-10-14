@@ -1,15 +1,16 @@
-// Header Component - Gran Bernardo Agro (UI/UX Pro Max Responsive)
+// Header Component - Gran Bernardo Agro (Clean Executive Design)
 import React from 'react';
 import { 
   Building2, 
   Calendar, 
   UserCheck, 
-  ShieldAlert, 
+  Bell,
   Mic, 
-  FileSpreadsheet,
+  UploadCloud,
   Menu,
   X,
-  Sprout
+  Sprout,
+  LogOut
 } from 'lucide-react';
 import { FarmProperty, UserProfile, UserRole } from '../types';
 
@@ -26,6 +27,7 @@ interface HeaderProps {
   onOpenImport: () => void;
   isMobileMenuOpen: boolean;
   onToggleMobileMenu: () => void;
+  onLogout?: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -40,88 +42,82 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenAiChat,
   onOpenImport,
   isMobileMenuOpen,
-  onToggleMobileMenu
+  onToggleMobileMenu,
+  onLogout
 }) => {
   const roleLabels: Record<UserRole, { label: string; badgeClass: string }> = {
     admin: { label: 'Administrador', badgeClass: 'badge-purple' },
-    consultant: { label: 'Consultor Gran Bernardo', badgeClass: 'badge-green' },
+    consultant: { label: 'Consultor Gran Bernardo', badgeClass: 'badge-cyan' },
     producer: { label: 'Produtor Rural', badgeClass: 'badge-amber' }
   };
 
   return (
     <header style={{
-      margin: '12px 16px 14px',
-      padding: '10px 18px',
+      width: '100%',
+      height: '60px',
+      padding: '0 24px',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'space-between',
-      gap: '12px',
+      gap: '16px',
       position: 'sticky',
-      top: '12px',
+      top: 0,
       zIndex: 50,
-      background: 'var(--color-card)',
-      border: '1px solid var(--color-border)',
-      borderRadius: 'var(--radius-md)'
+      background: 'var(--color-surface-1)',
+      borderBottom: '1px solid var(--color-border)',
+      boxShadow: '0 1px 3px rgba(0, 0, 0, 0.25)'
     }}>
       {/* Brand & Mobile Hamburger */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
         {/* Mobile Menu Button */}
         <button
           onClick={onToggleMobileMenu}
           className="btn btn-secondary mobile-menu-btn"
           style={{
-            padding: '8px',
-            minHeight: '36px',
-            width: '36px',
+            padding: '6px',
+            minHeight: '34px',
+            width: '34px',
             alignItems: 'center',
             justifyContent: 'center'
           }}
           aria-label={isMobileMenuOpen ? 'Fechar menu de navegação' : 'Abrir menu de navegação'}
         >
-          {isMobileMenuOpen ? <X size={18} color="#00f2fe" /> : <Menu size={18} color="#00f2fe" />}
+          {isMobileMenuOpen ? <X size={18} color="#06b6d4" /> : <Menu size={18} color="#06b6d4" />}
         </button>
 
-        {/* Vector Logo Badge */}
+        {/* Minimal Vector Logo */}
         <div style={{
-          width: '36px',
-          height: '36px',
-          borderRadius: '9px',
-          background: 'rgba(0, 242, 254, 0.1)',
+          width: '32px',
+          height: '32px',
+          borderRadius: '8px',
+          background: 'rgba(6, 182, 212, 0.1)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          border: '1px solid rgba(0, 242, 254, 0.25)',
+          border: '1px solid rgba(6, 182, 212, 0.2)',
           flexShrink: 0
         }}>
-          <Sprout size={18} color="#00f2fe" />
+          <Sprout size={17} color="#06b6d4" />
         </div>
 
-        <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <span style={{ fontSize: '1.05rem', fontWeight: 800, letterSpacing: '-0.03em', color: '#ffffff' }}>
-              GRAN BERNARDO
-            </span>
-            <span style={{ 
-              color: '#00f2fe', 
-              fontSize: '0.65rem', 
-              fontWeight: 800, 
-              background: 'rgba(0, 242, 254, 0.1)',
-              padding: '2px 5px',
-              borderRadius: '4px',
-              border: '1px solid rgba(0, 242, 254, 0.25)',
-              letterSpacing: '0.05em'
-            }}>
-              AGRO
-            </span>
-          </div>
-          <p style={{ fontSize: '0.68rem', color: 'var(--color-text-muted)', lineHeight: 1.2 }}>
-            Consultoria Financeira & Reestruturação
-          </p>
+        <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
+          <span style={{ fontSize: '1.02rem', fontWeight: 800, letterSpacing: '-0.02em', color: '#f8fafc' }}>
+            GRAN BERNARDO
+          </span>
+          <span style={{ 
+            color: '#22d3ee', 
+            fontSize: '0.62rem', 
+            fontWeight: 700, 
+            letterSpacing: '0.08em',
+            textTransform: 'uppercase'
+          }}>
+            AGRO
+          </span>
         </div>
       </div>
 
       {/* Selectors: Farm & Safra (Desktop Only) */}
-      <div className="desktop-selectors" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+      <div className="desktop-selectors" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
         {/* Farm Selector */}
         <div style={{
           display: 'flex',
@@ -130,31 +126,34 @@ export const Header: React.FC<HeaderProps> = ({
           background: 'var(--color-surface-2)',
           border: '1px solid var(--color-border)',
           borderRadius: 'var(--radius-sm)',
-          padding: '6px 12px'
+          padding: '5px 12px',
+          height: '34px'
         }}>
-          <Building2 size={15} color="#00f2fe" />
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <span style={{ fontSize: '0.62rem', color: 'var(--color-text-subtle)', textTransform: 'uppercase', fontWeight: 600 }}>Propriedade</span>
-            <select
-              value={selectedFarmId}
-              onChange={(e) => onFarmChange(e.target.value)}
-              style={{
-                background: 'transparent',
-                border: 'none',
-                color: '#ffffff',
-                fontSize: '0.8rem',
-                fontWeight: 600,
-                outline: 'none',
-                cursor: 'pointer'
-              }}
-            >
+          <Building2 size={14} color="#06b6d4" />
+          <select
+            value={selectedFarmId}
+            onChange={(e) => onFarmChange(e.target.value)}
+            style={{
+              background: 'transparent',
+              border: 'none',
+              color: '#f8fafc',
+              fontSize: '0.8rem',
+              fontWeight: 600,
+              outline: 'none',
+              cursor: 'pointer'
+            }}
+          >
+            <option value="all" style={{ background: '#141b29', color: '#22d3ee', fontWeight: 700 }}>
+              🌾 Consolidado (Todas as Fazendas - {farms.reduce((a, b) => a + b.totalAreaHa, 0).toLocaleString('pt-BR')} ha)
+            </option>
+            <optgroup label="Propriedades Individuais" style={{ background: '#141b29', color: '#94a3b8' }}>
               {farms.map(f => (
-                <option key={f.id} value={f.id} style={{ background: '#161922', color: '#fff' }}>
-                  {f.name} ({f.totalAreaHa} ha)
+                <option key={f.id} value={f.id} style={{ background: '#141b29', color: '#fff' }}>
+                  {f.name} ({f.totalAreaHa.toLocaleString('pt-BR')} ha - {f.municipality}/{f.state})
                 </option>
               ))}
-            </select>
-          </div>
+            </optgroup>
+          </select>
         </div>
 
         {/* Safra Selector */}
@@ -165,28 +164,26 @@ export const Header: React.FC<HeaderProps> = ({
           background: 'var(--color-surface-2)',
           border: '1px solid var(--color-border)',
           borderRadius: 'var(--radius-sm)',
-          padding: '6px 12px'
+          padding: '5px 12px',
+          height: '34px'
         }}>
-          <Calendar size={15} color="#3b82f6" />
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <span style={{ fontSize: '0.62rem', color: 'var(--color-text-subtle)', textTransform: 'uppercase', fontWeight: 600 }}>Ano Safra</span>
-            <select
-              value={currentSafra}
-              onChange={(e) => onSafraChange(e.target.value)}
-              style={{
-                background: 'transparent',
-                border: 'none',
-                color: '#ffffff',
-                fontSize: '0.8rem',
-                fontWeight: 600,
-                outline: 'none',
-                cursor: 'pointer'
-              }}
-            >
-              <option value="2024/2025" style={{ background: '#161922', color: '#fff' }}>Safra 2024/2025 (Ativa)</option>
-              <option value="2025/2026" style={{ background: '#161922', color: '#fff' }}>Safra 2025/2026 (Projetada)</option>
-            </select>
-          </div>
+          <Calendar size={14} color="#94a3b8" />
+          <select
+            value={currentSafra}
+            onChange={(e) => onSafraChange(e.target.value)}
+            style={{
+              background: 'transparent',
+              border: 'none',
+              color: '#f8fafc',
+              fontSize: '0.8rem',
+              fontWeight: 600,
+              outline: 'none',
+              cursor: 'pointer'
+            }}
+          >
+            <option value="2024/2025" style={{ background: '#141b29', color: '#fff' }}>Safra 2024/2025</option>
+            <option value="2025/2026" style={{ background: '#141b29', color: '#fff' }}>Safra 2025/2026</option>
+          </select>
         </div>
       </div>
 
@@ -196,10 +193,10 @@ export const Header: React.FC<HeaderProps> = ({
         <button
           onClick={onOpenAiChat}
           className="btn btn-secondary"
-          style={{ padding: '6px 12px', fontSize: '0.78rem' }}
-          title="Falar ou digitar para o Assistente IA"
+          style={{ padding: '5px 12px', fontSize: '0.78rem', height: '34px' }}
+          title="Falar ou digitar para o Consultor IA"
         >
-          <Mic size={14} color="#00f2fe" />
+          <Mic size={14} color="#06b6d4" />
           <span>Falar com IA</span>
         </button>
 
@@ -208,14 +205,14 @@ export const Header: React.FC<HeaderProps> = ({
           <button
             onClick={onOpenImport}
             className="btn btn-secondary"
-            style={{ padding: '6px 12px', fontSize: '0.78rem' }}
-            title="Enviar Planilha Excel ou PDF"
+            style={{ padding: '5px 12px', fontSize: '0.78rem', height: '34px' }}
+            title="Importar Planilha Excel ou Balanço"
           >
-            <FileSpreadsheet size={14} color="#00f2fe" />
+            <UploadCloud size={14} color="#94a3b8" />
             <span>Importar</span>
           </button>
 
-          {/* Role Selector */}
+          {/* Role Selector Pill */}
           <div style={{
             display: 'flex',
             alignItems: 'center',
@@ -223,51 +220,87 @@ export const Header: React.FC<HeaderProps> = ({
             background: 'var(--color-surface-2)',
             border: '1px solid var(--color-border)',
             borderRadius: 'var(--radius-sm)',
-            padding: '4px 10px'
+            padding: '4px 10px',
+            height: '34px'
           }}>
-            <UserCheck size={14} color="var(--color-text-muted)" />
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
-              <span style={{ fontSize: '0.6rem', color: 'var(--color-text-subtle)' }}>Perfil</span>
-              <select
-                value={currentUser.role}
-                onChange={(e) => onRoleChange(e.target.value as UserRole)}
-                style={{
-                  background: 'transparent',
-                  border: 'none',
-                  color: '#ffffff',
-                  fontSize: '0.76rem',
-                  fontWeight: 600,
-                  outline: 'none',
-                  cursor: 'pointer'
-                }}
-              >
-                <option value="consultant" style={{ background: '#0a110e', color: '#fff' }}>Consultor Gran Bernardo</option>
-                <option value="producer" style={{ background: '#0a110e', color: '#fff' }}>Produtor Rural</option>
-                <option value="admin" style={{ background: '#0a110e', color: '#fff' }}>Administrador</option>
-              </select>
-            </div>
-            <span className={`badge ${roleLabels[currentUser.role].badgeClass}`} style={{ fontSize: '0.62rem', padding: '2px 6px' }}>
-              {currentUser.role === 'consultant' ? 'Consultor' : currentUser.role === 'producer' ? 'Produtor' : 'Admin'}
-            </span>
+            <UserCheck size={14} color="var(--color-text-subtle)" />
+            <select
+              value={currentUser.role}
+              onChange={(e) => onRoleChange(e.target.value as UserRole)}
+              style={{
+                background: 'transparent',
+                border: 'none',
+                color: '#f8fafc',
+                fontSize: '0.78rem',
+                fontWeight: 600,
+                outline: 'none',
+                cursor: 'pointer'
+              }}
+            >
+              <option value="consultant" style={{ background: '#141b29', color: '#fff' }}>Dr. Roberto (Consultor)</option>
+              <option value="producer" style={{ background: '#141b29', color: '#fff' }}>Produtor Rural</option>
+              <option value="admin" style={{ background: '#141b29', color: '#fff' }}>Administrador</option>
+            </select>
           </div>
+
+          {/* Sair / Logout Button */}
+          {onLogout && (
+            <button
+              onClick={onLogout}
+              className="btn btn-secondary"
+              style={{ padding: '6px 10px', height: '34px', color: 'var(--color-text-muted)' }}
+              title="Encerrar Sessão / Trocar de Conta"
+            >
+              <LogOut size={13} />
+              <span style={{ fontSize: '0.74rem' }}>Sair</span>
+            </button>
+          )}
         </div>
 
-        {/* Risk Alerts Counter */}
-        {alertCount > 0 && (
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '5px',
-            background: 'rgba(239, 68, 68, 0.16)',
-            border: '1px solid rgba(239, 68, 68, 0.35)',
-            color: '#f87171',
-            padding: '6px 10px',
-            borderRadius: 'var(--radius-sm)',
-            fontSize: '0.76rem',
-            fontWeight: 700
-          }}>
-            <ShieldAlert size={15} />
-            <span>{alertCount}</span>
+        {/* Minimal Risk Alerts Bell */}
+        {alertCount > 0 ? (
+          <div 
+            title={`${alertCount} alertas críticos de caixa e passivo`}
+            style={{
+              position: 'relative',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: '34px',
+              height: '34px',
+              borderRadius: 'var(--radius-sm)',
+              background: 'rgba(239, 68, 68, 0.1)',
+              border: '1px solid rgba(239, 68, 68, 0.25)',
+              color: '#f87171',
+              cursor: 'pointer'
+            }}
+          >
+            <Bell size={15} />
+            <span style={{
+              position: 'absolute',
+              top: '4px',
+              right: '4px',
+              width: '6px',
+              height: '6px',
+              borderRadius: '50%',
+              background: '#ef4444'
+            }} />
+          </div>
+        ) : (
+          <div 
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: '34px',
+              height: '34px',
+              borderRadius: 'var(--radius-sm)',
+              background: 'var(--color-surface-2)',
+              border: '1px solid var(--color-border)',
+              color: 'var(--color-text-subtle)'
+            }}
+          >
+            <Bell size={15} />
           </div>
         )}
       </div>

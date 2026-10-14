@@ -39,7 +39,10 @@ export class ExcelImporterService {
     financiamento_investimento: ['finame', 'investimento', 'banco john deere', 'moderfrota', 'trator parcelamento'],
     juros_encargos_bancarios: ['juros', 'tarifa bancaria', 'iof', 'encargo', 'comissao'],
     liquidacao_cpr_barter: ['liquidacao cpr', 'barter', 'troca de graos', 'entrega fisica'],
-    dividas_renegociadas: ['renegociacao', 'acordo', 'parcelamento passivo', 'recuperacao']
+    dividas_renegociadas: ['renegociacao', 'acordo', 'parcelamento passivo', 'recuperacao'],
+    silo_armazenagem: ['silo', 'klepper', 'secador', 'estrutura metalica', 'moega'],
+    emprestimo_terceiros: ['mutuo', 'emprestimo pessoal', 'terceiros', 'juros 1.5'],
+    cessao_credito_bunge: ['cessao', 'bunge', 'credito trading']
   };
 
   private static categoryLabels: Record<CashFlowCategory, string> = {
@@ -68,7 +71,10 @@ export class ExcelImporterService {
     financiamento_investimento: 'Financiamento de Investimento / Máquinas',
     juros_encargos_bancarios: 'Juros e Encargos Bancários',
     liquidacao_cpr_barter: 'Liquidação de Barter / CPR',
-    dividas_renegociadas: 'Passivos e Dívidas Renegociadas'
+    dividas_renegociadas: 'Passivos e Dívidas Renegociadas',
+    silo_armazenagem: 'Silos e Armazenagem (Klepper)',
+    emprestimo_terceiros: 'Empréstimos de Terceiros / Mútuo',
+    cessao_credito_bunge: 'Cessão de Crédito / Barter Bunge'
   };
 
   /**
