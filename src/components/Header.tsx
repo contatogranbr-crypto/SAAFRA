@@ -30,6 +30,7 @@ interface HeaderProps {
   onToggleMobileMenu: () => void;
   onLogout?: () => void;
   isSupabaseConnected?: boolean;
+  onOpenSupabaseConfig?: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -45,7 +46,9 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenImport,
   isMobileMenuOpen,
   onToggleMobileMenu,
-  onLogout
+  onLogout,
+  isSupabaseConnected = true,
+  onOpenSupabaseConfig
 }) => {
   const roleLabels: Record<UserRole, { label: string; badgeClass: string }> = {
     admin: { label: 'Administrador', badgeClass: 'badge-purple' },
@@ -205,24 +208,33 @@ export const Header: React.FC<HeaderProps> = ({
         {/* Desktop Controls (Import, Role, Cloud) */}
         <div className="desktop-controls" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           {/* Supabase Status Pill */}
-          <div 
-            title="Banco de Dados Supabase (appruralteste) Conectado"
+          <button
+            onClick={onOpenSupabaseConfig}
+            title={isSupabaseConnected ? "Supabase Conectado (192.168.0.126:8000) — Clique para abrir configurações e status" : "Supabase Desconectado — Clique para configurar"}
             style={{
               display: 'flex',
               alignItems: 'center',
               gap: '6px',
-              background: 'rgba(16, 185, 129, 0.08)',
-              border: '1px solid rgba(16, 185, 129, 0.25)',
+              background: isSupabaseConnected ? 'rgba(16, 185, 129, 0.08)' : 'rgba(239, 68, 68, 0.08)',
+              border: `1px solid ${isSupabaseConnected ? 'rgba(16, 185, 129, 0.3)' : 'rgba(239, 68, 68, 0.3)'}`,
               borderRadius: 'var(--radius-sm)',
               padding: '4px 10px',
               height: '34px',
-              cursor: 'default'
+              cursor: 'pointer',
+              color: isSupabaseConnected ? '#10b981' : '#ef4444',
+              transition: 'all 0.2s ease'
             }}
           >
-            <span style={{ width: '7px', height: '7px', borderRadius: '50%', background: '#10b981', boxShadow: '0 0 6px #10b981' }} />
-            <Database size={13} color="#10b981" />
-            <span style={{ fontSize: '0.74rem', color: '#10b981', fontWeight: 600 }}>Supabase</span>
-          </div>
+            <span style={{ 
+              width: '7px', 
+              height: '7px', 
+              borderRadius: '50%', 
+              background: isSupabaseConnected ? '#10b981' : '#ef4444', 
+              boxShadow: `0 0 6px ${isSupabaseConnected ? '#10b981' : '#ef4444'}` 
+            }} />
+            <Database size={13} color={isSupabaseConnected ? '#10b981' : '#ef4444'} />
+            <span style={{ fontSize: '0.74rem', fontWeight: 600 }}>Supabase</span>
+          </button>
 
           <button
             onClick={onOpenImport}

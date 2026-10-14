@@ -1,58 +1,170 @@
 // Cliente Supabase e Sincronização em Nuvem — Gran Bernardo Agro
-import { createClient } from '@supabase/supabase-js';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { CashFlowEntry, FarmProperty, CropPlanningItem, DebtLiability, AuditLog } from '../types';
 
-const SUPABASE_URL = (import.meta as any).env?.VITE_SUPABASE_URL || 'https://tcgypvyuqaqsdtcvoaum.supabase.co';
-const SUPABASE_ANON_KEY = (import.meta as any).env?.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRjZ3lwdnl1cWFxc2R0Y3ZvYXVtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM2ODI3NzksImV4cCI6MjA4OTI1ODc3OX0.QU4eO6i1OjJHsMWzLC2Bi0sAsf6lNlWVJZ8PMAxYFVg';
+export const DEFAULT_SUPABASE_URL = 'https://wjbbprsbuhgfwqqldbnx.supabase.co';
+export const DEFAULT_SUPABASE_ANON_KEY = 'sb_publishable_29YNbNgkChnDZF2ylkVfRA_BMeX9ZCc';
 
-export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+function getInitialUrl(): string {
+  if (typeof window !== 'undefined') {
+    const saved = localStorage.getItem('gb_supabase_url');
+    if (saved && !saved.includes('192.168.0.126') && !saved.includes('tcgypvyuqaqsdtcvoaum')) {
+      return saved.trim();
+    }
+  }
+  return (import.meta as any).env?.VITE_SUPABASE_URL || DEFAULT_SUPABASE_URL;
+}
+
+function getInitialKey(): string {
+  if (typeof window !== 'undefined') {
+    const saved = localStorage.getItem('gb_supabase_key');
+    if (saved && !saved.includes('xaOHK2GK5R36cemKfD') && !saved.includes('QU4eO6i1OjJHsMWzLC2Bi0sAsf6lNlWVJZ8PMAxYFVg')) {
+      return saved.trim();
+    }
+  }
+  return (import.meta as any).env?.VITE_SUPABASE_ANON_KEY || DEFAULT_SUPABASE_ANON_KEY;
+}
+
+let activeUrl = getInitialUrl();
+let activeKey = getInitialKey();
+
+export let supabase: SupabaseClient = createClient(activeUrl, activeKey, {
   auth: {
     persistSession: true,
     autoRefreshToken: true
   }
 });
 
+export interface SupabaseConnectionStatus {
+  success: boolean;
+  message: string;
+  url: string;
+  latencyMs?: number;
+  tablesReady: boolean;
+  missingTables?: string[];
+  hint?: string;
+}
+
 export class SupabaseService {
   private static isConnected: boolean | null = null;
+  private static lastStatus: SupabaseConnectionStatus | null = null;
+
+  static getActiveUrl(): string {
+    return activeUrl;
+  }
+
+  static getActiveKey(): string {
+    return activeKey;
+  }
+
+  static saveConfig(url: string, key: string): void {
+    activeUrl = url.trim();
+    activeKey = key.trim();
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('gb_supabase_url', activeUrl);
+      localStorage.setItem('gb_supabase_key', activeKey);
+    }
+    supabase = createClient(activeUrl, activeKey, {
+      auth: {
+        persistSession: true,
+        autoRefreshToken: true
+      }
+    });
+  }
+
+  static resetConfig(): void {
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('gb_supabase_url');
+      localStorage.removeItem('gb_supabase_key');
+    }
+    activeUrl = (import.meta as any).env?.VITE_SUPABASE_URL || DEFAULT_SUPABASE_URL;
+    activeKey = (import.meta as any).env?.VITE_SUPABASE_ANON_KEY || DEFAULT_SUPABASE_ANON_KEY;
+    supabase = createClient(activeUrl, activeKey, {
+      auth: {
+        persistSession: true,
+        autoRefreshToken: true
+      }
+    });
+  }
 
   /**
-   * Testa a conectividade com o banco de dados Supabase
+   * Testa a conectividade com o banco de dados Supabase e verifica o schema
    */
-  static async testConnection(): Promise<{ success: boolean; message: string; project?: string }> {
+  static async testConnection(): Promise<SupabaseConnectionStatus> {
+    const startTime = performance.now();
     try {
+      // 1. Testa a query na tabela de fazendas ou fluxo de caixa
       const { data, error } = await supabase
         .from('farms')
         .select('id, name')
         .limit(1);
 
-      if (error) {
-        // Tenta checar a tabela de usuários caso farms esteja vazia ou com RLS
-        const { error: usersError } = await supabase
-          .from('users')
-          .select('id')
-          .limit(1);
+      const latencyMs = Math.round(performance.now() - startTime);
 
-        if (usersError && usersError.code !== 'PGRST116') {
-          this.isConnected = false;
-          return {
-            success: false,
-            message: `Falha na conexão: ${error.message || usersError.message}`
+      if (error) {
+        // PGRST205 significa que o PostgREST conectou com sucesso, validou a chave, mas a tabela ainda não foi criada no banco
+        if (error.code === 'PGRST205') {
+          this.isConnected = true;
+          const status: SupabaseConnectionStatus = {
+            success: true,
+            tablesReady: false,
+            url: activeUrl,
+            latencyMs,
+            message: `Servidor Supabase conectado com sucesso (${activeUrl}).`,
+            hint: 'As tabelas ainda não foram criadas no banco de dados. Use o script SQL abaixo para inicializar as tabelas.'
           };
+          this.lastStatus = status;
+          return status;
         }
+
+        // PGRST116 ou PGRST301
+        if (error.code === 'PGRST116' || error.code === 'PGRST301') {
+          this.isConnected = true;
+          const status: SupabaseConnectionStatus = {
+            success: true,
+            tablesReady: true,
+            url: activeUrl,
+            latencyMs,
+            message: `Conectado ao Supabase (${activeUrl}) — ${latencyMs}ms`
+          };
+          this.lastStatus = status;
+          return status;
+        }
+
+        // Outros erros (ex: chave inválida ou 401)
+        this.isConnected = false;
+        const status: SupabaseConnectionStatus = {
+          success: false,
+          tablesReady: false,
+          url: activeUrl,
+          latencyMs,
+          message: `Erro de autenticação ou resposta do Supabase: ${error.message} (Código ${error.code})`
+        };
+        this.lastStatus = status;
+        return status;
       }
 
+      // Conexão e tabela respondendo com sucesso
       this.isConnected = true;
-      return {
+      const status: SupabaseConnectionStatus = {
         success: true,
-        message: 'Conectado com sucesso ao Supabase (appruralteste)',
-        project: 'appruralteste'
+        tablesReady: true,
+        url: activeUrl,
+        latencyMs,
+        message: `Conectado com sucesso ao Supabase (${activeUrl}) — ${latencyMs}ms`
       };
+      this.lastStatus = status;
+      return status;
     } catch (err: any) {
       this.isConnected = false;
-      return {
+      const status: SupabaseConnectionStatus = {
         success: false,
-        message: err.message || 'Erro inesperado ao conectar ao Supabase'
+        tablesReady: false,
+        url: activeUrl,
+        message: err.message || 'Não foi possível alcançar o servidor Supabase. Verifique o IP e a porta.'
       };
+      this.lastStatus = status;
+      return status;
     }
   }
 
@@ -60,8 +172,12 @@ export class SupabaseService {
     return this.isConnected;
   }
 
+  static getLastStatus(): SupabaseConnectionStatus | null {
+    return this.lastStatus;
+  }
+
   static getProjectUrl(): string {
-    return SUPABASE_URL;
+    return activeUrl;
   }
 
   /**
@@ -88,7 +204,9 @@ export class SupabaseService {
         });
 
       if (error) {
-        console.warn('Aviso ao sincronizar lançamento no Supabase:', error.message);
+        if (error.code !== 'PGRST205') {
+          console.warn('Aviso ao sincronizar lançamento no Supabase:', error.message);
+        }
         return { success: false, error: error.message };
       }
 
@@ -120,8 +238,8 @@ export class SupabaseService {
         state: f.location?.split('-')?.[1]?.trim() || 'MT',
         totalAreaHa: Number(f.area) || 2800,
         arableAreaHa: Math.round((Number(f.area) || 2800) * 0.75),
-        crops: ['Soja', 'Milho 2ª Safra'],
-        currentSafra: '2024/2025',
+        crops: f.crops || ['Soja', 'Milho 2ª Safra'],
+        currentSafra: f.current_safra || '2024/2025',
         responsiblePartners: ['Dr. Roberto Bernardo']
       }));
     } catch {

@@ -17,6 +17,7 @@ import { ExecutiveReportsView } from './views/ExecutiveReportsView';
 import { FarmsAndClientsView } from './views/FarmsAndClientsView';
 import { AgentTrainerView } from './views/AgentTrainerView';
 import { AuthView } from './views/AuthView';
+import { SupabaseConfigModal } from './components/SupabaseConfigModal';
 
 // Initial Data & Financial Engine
 import { 
@@ -56,6 +57,7 @@ export function App() {
 
   // Supabase Connection State
   const [isSupabaseConnected, setIsSupabaseConnected] = useState<boolean>(true);
+  const [isSupabaseModalOpen, setIsSupabaseModalOpen] = useState<boolean>(false);
 
   useEffect(() => {
     SupabaseService.testConnection().then(res => {
@@ -300,6 +302,7 @@ export function App() {
         onToggleMobileMenu={() => setIsMobileMenuOpen(prev => !prev)}
         onLogout={handleLogout}
         isSupabaseConnected={isSupabaseConnected}
+        onOpenSupabaseConfig={() => setIsSupabaseModalOpen(true)}
       />
 
       {/* Mobile Drawer (When Open on Mobile / Tablet) */}
@@ -476,6 +479,13 @@ export function App() {
         </main>
 
       </div>
+
+      {/* Supabase Configuration & Status Modal */}
+      <SupabaseConfigModal
+        isOpen={isSupabaseModalOpen}
+        onClose={() => setIsSupabaseModalOpen(false)}
+        onConnectionChange={(connected) => setIsSupabaseConnected(connected)}
+      />
 
     </div>
   );
